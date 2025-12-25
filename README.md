@@ -2,6 +2,7 @@
 an expenditure tracking app, created for fun
 
 ## Folder Structure
+```
 exPANDAture/
 │
 ├─ index.html
@@ -29,3 +30,4 @@ exPANDAture/
     ├─ category-select.js
     └─ currency-select.js
     └─ list.js
+```
