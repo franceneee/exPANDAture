@@ -1,0 +1,95 @@
+:root {
+    --bg: #121212;
+    --card: #1e1e1e;
+    --text: #e5e5e5;
+    --muted: #9aa0a6;
+    --accent: #7c7cff;
+    --danger: #ff6b6b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.container {
+    max-width: 640px;
+    margin: auto;
+    padding: 1rem;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+form {
+    display: grid;
+    gap: 0.5rem;
+}
+
+input,
+button {
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+}
+
+input {
+    background: #2a2a2a;
+    color: var(--text);
+}
+
+button {
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#expense-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.expense-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.delete-btn {
+    background: transparent;
+    color: var(--danger);
+}

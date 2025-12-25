@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <main class="container">
+
+        <h1>Expense Tracker</h1>
+
+        <section class="card">
+            <form id="expense-form">
+                <input type="date" name="date" required />
+                <input type="text" name="description" placeholder="Description" required />
+                <input type="number" name="amount" step="0.01" placeholder="Amount" required />
+                <select id="currency" name="currency" required></select>
+                <select id="category" name="category"></select>
+
+                <button>Add Expense</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <button id="export-btn">Export CSV</button>
+            <ul id="expense-list"></ul>
+        </section>
+
+        <section class="card">
+            <h2>Categories</h2>
+            <form id="category-form">
+                <input name="category-name" placeholder="New category" required />
+                <button>Add</button>
+            </form>
+            <ul id="category-list"></ul>
+        </section>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
