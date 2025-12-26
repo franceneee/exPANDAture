@@ -1,5 +1,8 @@
-export function setupMealTypeUI(categoryMap) {
+import { getCategoryMap } from "../app.js";
+
+export function setupMealTypeUI() {
     var foodCategory;
+    const categoryMap = getCategoryMap();
 
     for (const [id, name] of Object.entries(categoryMap)) {
         if (name.toLowerCase() === "food") {
@@ -20,4 +23,11 @@ export function setupMealTypeUI(categoryMap) {
             mealSelect.value = "";
         }
     });
+}
+
+export function hideMealTypeUI() {
+    const wrapper = document.getElementById("meal-type-wrapper");
+    const mealSelect = document.getElementById("meal-type-select");
+    wrapper.style.display = "none";
+    mealSelect.value = "";
 }

@@ -12,7 +12,6 @@ import { setupMonthSwitcher } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
 
 let categoryMap = {};
-let currentExpenses = [];
 
 export function getCategoryMap() {
   return categoryMap;
@@ -25,11 +24,11 @@ async function initApp() {
   await seedCategoriesIfEmpty();
   categoryMap = await populateCategorySelect();
   await populateCurrencySelect();
-  setupExpenseForm(currentExpenses);
+  setupExpenseForm();
   setupCategoryManager();
   await renderMonthlyExpenses();
   await renderMonthlySummary();
-  setupMealTypeUI(categoryMap);
+  setupMealTypeUI();
 }
 
 initApp().catch(console.error);

@@ -1,13 +1,14 @@
 import { addExpense } from "../features/expenses.js";
 import { renderMonthlySummary } from "./summary.js";
 import { renderMonthlyExpenses } from "./expense-list.js";
+import { setupMealTypeUI, hideMealTypeUI } from "./meal-type-ui.js";
 
 function getMonthKey(dateStr) {
     const d = new Date(dateStr);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
-export function setupExpenseForm(onAdd) {
+export function setupExpenseForm() {
     const f = document.getElementById("expense-form");
     // Set default date
     const dateInput = f.querySelector("input[name='date']");
@@ -36,5 +37,6 @@ export function setupExpenseForm(onAdd) {
 
         f.reset();
         dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+        hideMealTypeUI();
     };
 }
