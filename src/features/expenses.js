@@ -1,4 +1,4 @@
-import { getStore } from "../db/db.js";
+import { getStore, requestToPromise } from "../db/db.js";
 
 export async function addExpense(expense) {
     const s = await getStore("expenses", "readwrite");
@@ -16,4 +16,12 @@ export async function getAllExpenses() {
 export async function deleteExpense(id) {
     const s = await getStore("expenses", "readwrite");
     s.delete(id);
+}
+
+export async function getExpensesByMonthKey(monthKey) {
+    const store = await getStore("expenses", "readonly");
+    const index = store.index("monthKey");
+
+    const request = index.getAll(monthKey);
+    return requestToPromise(request);
 }

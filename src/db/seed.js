@@ -1,15 +1,12 @@
 import { getStore } from "./db.js";
 
 const DEFAULT_CATEGORIES = [
-    "food", "travel", "groceries",
-    "games", "gacha", "social", 
-    "bubble tea", "ssb", "shopping",
-    "lunch", "dinner", "snacks",
-    "gifts"
+    "bubble tea", "food", "gacha", "games",
+    "gifts", "groceries", "social", "travel",
+    "ssb", "shopping",
 ];
 
 export async function seedCategoriesIfEmpty() {
-    console.log("Seeding categories if empty…");    
     const store = getStore("categories");
     const countRequest = store.count();
 

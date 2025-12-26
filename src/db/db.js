@@ -1,6 +1,5 @@
-// db.js
 const DB_NAME = "expense_tracker";
-const DB_VERSION = 2;
+const DB_VERSION = 1;
 let db = null;
 
 export function openDB() {
@@ -16,13 +15,22 @@ export function openDB() {
 
             console.log("Upgrading DB…");
 
+            let expenseStore;
             if (!database.objectStoreNames.contains("expenses")) {
-                const expenseStore = database.createObjectStore("expenses", {
+                expenseStore = database.createObjectStore("expenses", {
                     keyPath: "id",
                     autoIncrement: true
                 });
-                expenseStore.createIndex("date", "date");
-                expenseStore.createIndex("categoryIds", "categoryIds", { multiEntry: true });
+            } else {
+                expenseStore = event.target.transaction.objectStore("expenses");
+            }
+
+            if (!expenseStore.indexNames.contains("monthKey")) {
+                expenseStore.createIndex("monthKey", "monthKey");
+            }
+
+            if (!expenseStore.indexNames.contains("categoryIds")) {
+                expenseStore.createIndex("categoryIds", "categoryIds");
             }
 
             if (!database.objectStoreNames.contains("categories")) {
@@ -54,4 +62,11 @@ export function getStore(storeName, mode = "readonly") {
     }
 
     return db.transaction(storeName, mode).objectStore(storeName);
+}
+
+export function requestToPromise(request) {
+    return new Promise((resolve, reject) => {
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
 }

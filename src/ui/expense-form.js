@@ -1,4 +1,11 @@
 import { addExpense } from "../features/expenses.js";
+import { renderMonthlySummary } from "./summary.js";
+import { renderMonthlyExpenses } from "./expense-list.js";
+
+function getMonthKey(dateStr) {
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
 
 export function setupExpenseForm(onAdd) {
     const f = document.getElementById("expense-form");
@@ -6,7 +13,6 @@ export function setupExpenseForm(onAdd) {
     const dateInput = f.querySelector("input[name='date']");
     const today = new Date();
     dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
 
     f.onsubmit = async e => {
         e.preventDefault();
@@ -17,13 +23,18 @@ export function setupExpenseForm(onAdd) {
             description: f.description.value,
             amount: Math.round(parseFloat(f.amount.value) * 100),
             currency: f.currency.value,
+            monthKey: getMonthKey(f.date.value),
             categoryId: f.category.value || null,
+            mealType: f["meal-type-select"].value || "other",
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
+        }).then(() => {
+            renderMonthlyExpenses();
+        }).then(() => {
+            renderMonthlySummary();
         });
 
         f.reset();
-        onAdd();
-        dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
     };
 }

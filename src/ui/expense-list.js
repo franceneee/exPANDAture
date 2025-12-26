@@ -1,18 +1,29 @@
-import { getAllExpenses, deleteExpense } from "../features/expenses.js";
+import { getCategoryMap } from "../app.js";
+import { getExpensesByMonthKey, deleteExpense } from "../features/expenses.js";
+import { getActiveMonthKey } from "../features/state.js";
 
-export async function renderExpenses(categoryMap) {
+export async function renderMonthlyExpenses() {
   const list = document.getElementById("expense-list");
-  const expenses = await getAllExpenses();
-
   list.innerHTML = "";
+
+  const expenses = await getExpensesByMonthKey(getActiveMonthKey());
+
+  if (expenses.length === 0) {
+    list.innerHTML = "<li>No expenses this month</li>";
+    return;
+  }
+
+  let categoryMap = getCategoryMap();
+
   expenses
     .sort((a, b) => b.date.localeCompare(a.date))
     .forEach(e => {
+      const mealLabel = e.mealType ? `[${e.mealType}] ` : "";
       const li = document.createElement("li");
       li.className = "expense-item";
       li.innerHTML = `
         <div>
-          <strong>${e.description}</strong>
+          <strong>${mealLabel}${e.description}</strong>
           <div class="meta">${e.date} · ${categoryMap[e.categoryId] || "Uncategorised"}</div>
         </div>
         <div>
@@ -23,7 +34,7 @@ export async function renderExpenses(categoryMap) {
 
       li.querySelector("button").onclick = async () => {
         await deleteExpense(e.id);
-        renderExpenses(categoryMap);
+        await renderMonthlyExpenses();
       };
 
       list.appendChild(li);

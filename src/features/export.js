@@ -1,15 +1,20 @@
-export function exportCSV(expenses, categoryMap) {
-    const rows = [
-        ["Date", "Description", "Amount", "Currency", "Category"]
-    ];
+import { getCategoryMap } from "../app.js";
+import { getExpensesByMonthKey } from "./expenses.js";
 
+export async function exportCSV(monthKey) {
+    const rows = [
+        ["Date", "Description", "Amount", "Currency", "Category", "Meal Type"]
+    ];
+    const expenses = await getExpensesByMonthKey(monthKey);
+    const categoryMap = getCategoryMap();
     expenses.forEach(e => {
         rows.push([
             e.date,
             e.description,
             (e.amount / 100).toFixed(2),
             e.currency,
-            categoryMap[e.categoryId] || "Uncategorised"
+            categoryMap[e.categoryId] || "Uncategorised",
+            e.mealType || ""
         ]);
     });
 

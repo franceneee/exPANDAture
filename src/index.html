@@ -12,6 +12,11 @@
     <main class="container">
 
         <h1>Expense Tracker</h1>
+        <section class="card">
+            <div id="monthlySummary">
+                Total this month: <strong id="monthlyTotal">0.00</strong>
+            </div>
+        </section>
 
         <section class="card">
             <form id="expense-form">
@@ -20,13 +25,28 @@
                 <input type="number" name="amount" step="0.01" placeholder="Amount" required />
                 <select id="currency" name="currency" required></select>
                 <select id="category" name="category"></select>
-
+                <label id="meal-type-wrapper" style="display:none;">
+                    Meal type
+                    <select id="meal-type-select">
+                        <option value="">-</option>
+                        <option value="breakfast">breakfast</option>
+                        <option value="lunch">lunch</option>
+                        <option value="dinner">dinner</option>
+                    </select>
+                </label>
                 <button>Add Expense</button>
             </form>
         </section>
 
         <section class="card">
-            <button id="export-btn">Export CSV</button>
+            <div>
+                <button id="export-btn">Export CSV</button>
+                <div id="monthSwitcher">
+                    <button id="prevMonth">←</button>
+                    <span id="currentMonth"></span>
+                    <button id="nextMonth">→</button>
+                </div>
+            </div>
             <ul id="expense-list"></ul>
         </section>
 

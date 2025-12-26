@@ -2,7 +2,6 @@ import { getStore } from "../db/db.js";
 
 export async function getCategories() {
     const store = getStore("categories");
-    console.log("Accessing categories store:", store);
     const request = store.getAll();
 
     return new Promise((resolve, reject) => {
