@@ -14,20 +14,25 @@ exPANDAture/
 │   └─ seed.js
 │
 ├─ features/
-│   ├─ expenses.js
 │   ├─ categories.js
-│   └─ export.js
+│   ├─ expenses.js
+│   ├─ export.js
+│   └─ state.js
 │
 ├─ models/
-│   ├─ expense.js
 │   ├─ category.js
-│   └─ constants.js
+│   ├─ constants.js
+│   └─ expense.js
 |
 └─ ui/
     ├─ expense-form.js
     ├─ expense-list.js
     ├─ category-manager.js
     ├─ category-select.js
-    └─ currency-select.js
-    └─ list.js
+    ├─ currency-select.js
+    ├─ list.js
+    ├─ meal-type-ui.js
+    ├─ month-switcher.js
+    └─ summary.js
+
 ```
