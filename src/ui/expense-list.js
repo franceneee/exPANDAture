@@ -28,7 +28,8 @@ export async function renderMonthlyExpenses() {
         </div>
         <div>
           $${(e.amount / 100).toFixed(2)}
-          <button data-id="${e.id}">✕</button>
+          <button class="material-symbols-outlined small-button" data-id="${e.id}">close</button>
+          <button class="material-symbols-outlined small-button">edit</button>
         </div>
       `;
 

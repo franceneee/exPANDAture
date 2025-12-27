@@ -93,3 +93,22 @@ button:hover {
     background: transparent;
     color: var(--danger);
 }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#monthSwitcher {
+    justify-content: right;
+    gap: 1rem;
+}
+
+.material-symbols-outlined.small-button {
+    border: none;
+    margin-left: 0.5rem;
+    size: 1rem;
+    font-size: 18px;
+}
