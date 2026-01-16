@@ -1,20 +1,23 @@
-let activeDate = null;
+export const state = {
+    activeDate: new Date(),
+    editingExpense: null   // null = creating new
+};
 
 export function initState() {
-    if (!activeDate) {
-        activeDate = new Date();
+    if (!state.activeDate) {
+        state.activeDate = new Date();
     }
 }
 
 export function getActiveDate() {
-    if (!activeDate) {
+    if (!state.activeDate) {
         initState();
     }
-    return activeDate;
+    return state.activeDate;
 }
 
 export function setActiveDate(date) {
-    activeDate = date;
+    state.activeDate = date;
 }
 
 export function getActiveMonthKey() {

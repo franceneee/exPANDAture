@@ -1,6 +1,7 @@
 import { getCategoryMap } from "../app.js";
-import { getExpensesByMonthKey, deleteExpense } from "../features/expenses.js";
+import { getExpensesByMonthKey, getExpenseById, deleteExpense } from "../features/expenses.js";
 import { getActiveMonthKey } from "../features/state.js";
+import { openEditForm } from "./expense-form.js";
 
 export async function renderMonthlyExpenses() {
   const list = document.getElementById("expense-list");
@@ -17,18 +18,19 @@ export async function renderMonthlyExpenses() {
 
   expenses
     .sort((a, b) => b.date.localeCompare(a.date))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .forEach(e => {
       const mealLabel = e.mealType ? `[${e.mealType}] ` : "";
       const li = document.createElement("li");
       li.className = "expense-item";
       li.innerHTML = `
-        <div>
+        <div class="expense-main" data-id="${e.id}">
           <strong>${mealLabel}${e.description}</strong>
           <div class="meta">${e.date} · ${categoryMap[e.categoryId] || "Uncategorised"}</div>
         </div>
         <div>
           $${(e.amount / 100).toFixed(2)}
-          <button class="material-symbols-outlined small-button" data-id="${e.id}">close</button>
+          <button class="material-symbols-outlined small-button" data-id="${e.id}">delete</button>
           <button class="material-symbols-outlined small-button">edit</button>
         </div>
       `;
@@ -38,8 +40,13 @@ export async function renderMonthlyExpenses() {
         await renderMonthlyExpenses();
       };
 
+      li.querySelector(".expense-main").onclick = async () => {
+        await getExpenseById(e.id).then(openEditForm);
+      };
+
       list.appendChild(li);
     });
 
   return expenses;
 }
+

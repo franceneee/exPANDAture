@@ -25,3 +25,18 @@ export async function getExpensesByMonthKey(monthKey) {
     const request = index.getAll(monthKey);
     return requestToPromise(request);
 }
+
+export async function getExpenseById(id) {
+  const store = await getStore("expenses", "readonly");
+  const request = store.get(id);
+  return requestToPromise(request);
+}
+
+export async function updateExpense(expense) {
+  const store = await getStore("expenses", "readwrite");
+
+  expense.updatedAt = new Date().toISOString();
+
+  const request = store.put(expense);   // put = insert OR update by key
+  return requestToPromise(request);
+}

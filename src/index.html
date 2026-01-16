@@ -7,7 +7,7 @@
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,close,edit" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,close,delete,edit,save" />
 </head>
 
 <body>
@@ -22,21 +22,38 @@
 
         <section class="card">
             <form id="expense-form">
-                <input type="date" name="date" required />
-                <input type="text" name="description" placeholder="Description" required />
-                <input type="number" name="amount" step="0.01" placeholder="Amount" required />
-                <select id="currency" name="currency" required></select>
-                <select id="category" name="category"></select>
-                <label id="meal-type-wrapper" style="display:none;">
-                    Meal type
-                    <select id="meal-type-select">
-                        <option value="">-</option>
-                        <option value="breakfast">breakfast</option>
-                        <option value="lunch">lunch</option>
-                        <option value="dinner">dinner</option>
-                    </select>
-                </label>
-                <button class="material-symbols-outlined small-button">add</button>
+                <h3 id="form-title">Add Expense</h3>
+                <div>
+                    <label for="date">Date</label>
+                    <input id="date" type="date" name="date"  />
+                </div>
+                <div>
+                    <label>Amount</label>
+                    <select id="currency" name="currency" ></select>
+                    <input type="number" name="amount" step="0.01" placeholder="Amount"  />
+                </div>
+                <div>
+                    <label for="category">Category</label>
+                    <select id="category" name="category"></select>
+                    <label id="meal-type-wrapper" style="display:none;">
+                        Meal type
+                        <select id="meal-type-select" name="meal-type-select">
+                            <option value="">-</option>
+                            <option value="breakfast">breakfast</option>
+                            <option value="lunch">lunch</option>
+                            <option value="dinner">dinner</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label for="description">Description</label>
+                    <br />
+                    <input id="description" type="text" name="description" placeholder="..."  />
+                </div>
+                <div>
+                    <button id="submitBtn" class="material-symbols-outlined button">add</button>
+                    <button type="button" id="resetBtn" class="material-symbols-outlined button">close</button>
+                </div>
             </form>
         </section>
 
@@ -55,12 +72,11 @@
         <section class="card">
             <h2>Categories</h2>
             <form id="category-form">
-                <input name="category-name" placeholder="New category" required />
+                <input name="category-name" placeholder="New category"  />
                 <button>Add</button>
             </form>
             <ul id="category-list"></ul>
         </section>
-
     </main>
 
     <script type="module" src="app.js"></script>
