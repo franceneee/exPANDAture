@@ -31,7 +31,7 @@ export async function renderMonthlyExpenses() {
         <div>
           $${(e.amount / 100).toFixed(2)}
           <button class="material-symbols-outlined small-button" data-id="${e.id}">delete</button>
-          <button class="material-symbols-outlined small-button">edit</button>
+          <button id="editBtn" class="material-symbols-outlined small-button" data-id="${e.id}">edit</button>
         </div>
       `;
 
@@ -40,7 +40,7 @@ export async function renderMonthlyExpenses() {
         await renderMonthlyExpenses();
       };
 
-      li.querySelector(".expense-main").onclick = async () => {
+      li.querySelector("#editBtn").onclick = async () => {
         await getExpenseById(e.id).then(openEditForm);
       };
 

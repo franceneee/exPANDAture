@@ -41,7 +41,8 @@ form {
     gap: 0.5rem;
 }
 
-select, option {
+select,
+option {
     padding: 0.5rem;
     border-radius: 8px;
     border: none;
@@ -126,4 +127,15 @@ button:hover {
 
 #description {
     width: 100%;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    display: none;
+}
+
+input[type='number']::-webkit-outer-spinner-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
 }
