@@ -139,3 +139,23 @@ input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;
 }
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px;
+    background: #5c5d5e1f;
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
+.day-group ul {
+    padding-left: 12px;
+}
+
+.sameline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
