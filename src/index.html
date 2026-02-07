@@ -14,8 +14,8 @@
     <main class="container">
 
         <h1>Expense Tracker</h1>
-        <section class="card">
-            <div id="monthlySummary">
+        <section class="card" id="monthlySummary">
+            <div>
                 Total this month: <strong id="monthlyTotal">0.00</strong>
             </div>
         </section>
@@ -25,12 +25,12 @@
                 <h3 id="form-title">Add Expense</h3>
                 <div>
                     <label for="date">Date</label>
-                    <input id="date" type="date" name="date"  />
+                    <input id="date" type="date" name="date" />
                 </div>
                 <div>
                     <label>Amount</label>
-                    <select id="currency" name="currency" ></select>
-                    <input type="number" name="amount" step="0.01" placeholder="Amount"  />
+                    <select id="currency" name="currency"></select>
+                    <input type="number" name="amount" step="0.01" placeholder="Amount" />
                 </div>
                 <div>
                     <label for="category">Category</label>
@@ -48,7 +48,7 @@
                 <div>
                     <label for="description">Description</label>
                     <br />
-                    <input id="description" type="text" name="description" placeholder="..."  />
+                    <input id="description" type="text" name="description" placeholder="..." />
                 </div>
                 <div>
                     <button type="submit" id="submitBtn" class="material-symbols-outlined button">add</button>
@@ -72,7 +72,7 @@
         <section class="card">
             <h2>Categories</h2>
             <form id="category-form">
-                <input name="category-name" placeholder="New category"  />
+                <input name="category-name" placeholder="New category" />
                 <button>Add</button>
             </form>
             <ul id="category-list"></ul>

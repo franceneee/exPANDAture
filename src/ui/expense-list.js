@@ -1,7 +1,7 @@
 import { getCategoryMap } from "../app.js";
 import { getExpensesByMonthKey, getExpenseById, deleteExpense } from "../features/expenses.js";
 import { getActiveMonthKey } from "../features/state.js";
-import { formatDateWithWeekday } from "../features/utils.js";
+import { formatSmartDate, getDayEmoji } from "../features/utils.js";
 import { openEditForm } from "./expense-form.js";
 
 export function groupExpensesByDay(expenses) {
@@ -49,14 +49,14 @@ export function renderGroupedByDay(expenses, list, categoryMap) {
   Object.entries(groups)
     .sort(([a], [b]) => b.localeCompare(a))
     .forEach(([date, group]) => {
-
+      const emoji = getDayEmoji(groups[date].items);
       const dayContainer = document.createElement("li");
       dayContainer.className = "day-group";
 
       const header = document.createElement("div");
       header.className = "day-header";
       header.innerHTML = `
-        ${formatDateWithWeekday(date)}
+        ${emoji}${formatSmartDate(date)}
         <div class="sameline">$${(group.total / 100).toFixed(2)} <span class="material-symbols-outlined">arrow_forward_ios</span></div>
       `;
 

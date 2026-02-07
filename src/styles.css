@@ -159,3 +159,12 @@ input[type='number']::-webkit-inner-spin-button {
     align-items: center;
     gap: 8px;
 }
+
+#monthlySummary {
+    position: fixed;
+    top: 0;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    z-index: 10;
+}
