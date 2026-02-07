@@ -17,8 +17,8 @@ export async function renderMonthlyExpenses() {
   let categoryMap = getCategoryMap();
 
   expenses
-    .sort((a, b) => b.date.localeCompare(a.date))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .sort((a, b) => b.date.localeCompare(a.date))
     .forEach(e => {
       const mealLabel = e.mealType ? `[${e.mealType}] ` : "";
       const li = document.createElement("li");
