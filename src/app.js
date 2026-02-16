@@ -35,3 +35,11 @@ initApp().catch(console.error);
 
 document.getElementById("export-btn").onclick = async () =>
   await exportCSV(getActiveMonthKey());
+
+const dateInput = document.querySelector('input[type="date"]');
+
+dateInput.addEventListener("click", () => {
+  if (dateInput.showPicker) {
+    dateInput.showPicker();
+  }
+});

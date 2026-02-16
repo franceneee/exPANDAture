@@ -41,10 +41,12 @@ export function getDayEmoji(dayExpenses) {
     const categories = getCategoryMap();
 
     const hasFood = dayExpenses.some(e => e.mealType);
+    const hasDrink = dayExpenses.some(e => categories[e.categoryId] === "ssb" || categories[e.categoryId] === "bubble tea");
     const hasShopping = dayExpenses.some(e => categories[e.categoryId] === "shopping" || categories[e.categoryId] === "groceries");
     const total = dayExpenses.reduce((s, e) => s + e.amount, 0);
-    console.log(hasFood);
+
     if (hasFood) return "🍔";
+    if (hasDrink) return "🧋";
     if (hasShopping) return "🛒";
     if (total > 10000) return "💸";     // > $100
     return "🧾";
