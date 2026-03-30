@@ -81,12 +81,12 @@ export function renderGroupedByDay(expenses, list, categoryMap) {
         </div>
         <div>
           $${(e.amount / 100).toFixed(2)}
-          <button class="material-symbols-outlined small-button" data-id="${e.id}">delete</button>
+          <button id="deleteBtn" class="material-symbols-outlined small-button" data-id="${e.id}">delete</button>
           <button id="editBtn" class="material-symbols-outlined small-button" data-id="${e.id}">edit</button>
         </div>
       `;
 
-        li.querySelector("button").onclick = async () => {
+        li.querySelector("#deleteBtn").onclick = async () => {
           await deleteExpense(e.id);
           await renderMonthlyExpenses();
         };

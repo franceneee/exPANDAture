@@ -51,3 +51,15 @@ export function getDayEmoji(dayExpenses) {
     if (total > 10000) return "💸";     // > $100
     return "🧾";
 }
+
+export function renderTodayDate() {
+    const d = new Date();
+
+    const text = d.toLocaleDateString("en-SG", {
+        month: "numeric",
+        day: "numeric",
+        weekday: "short"
+    });
+
+    document.getElementById("today-date").textContent = text;
+}

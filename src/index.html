@@ -7,20 +7,23 @@
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,arrow_forward_ios,close,delete,edit,save" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,arrow_forward_ios,close,delete,edit,restore_page,save" />
 </head>
 
 <body>
     <main class="container">
 
         <h1>Expense Tracker</h1>
-        <section class="card" id="monthlySummary">
-            <div>
-                Total this month: <strong id="monthlyTotal">0.00</strong>
+        <section class="card" id="home-view">
+            <div class="monthly-card">
+                <div id="today-date">000</div>
+                <div>
+                    Total this month: <strong id="monthlyTotal">0.00</strong>
+                </div>
+                <button id="addExpenseBtn" class="material-symbols-outlined button">add</button>
             </div>
         </section>
-
-        <section class="card">
+        <section class="card expense-form" id="expense-form-view">
             <form id="expense-form">
                 <h3 id="form-title">Add Expense</h3>
                 <div>
@@ -52,13 +55,15 @@
                 </div>
                 <div>
                     <button type="submit" id="submitBtn" class="material-symbols-outlined button">add</button>
-                    <button type="button" id="resetBtn" class="material-symbols-outlined button">close</button>
+                    <button type="button" id="resetBtn" class="material-symbols-outlined button">restore_page</button>
+                    <button type="button" id="closeBtn" class="material-symbols-outlined button">close</button>
                 </div>
             </form>
         </section>
 
-        <section class="card">
+        <section class="card history" id="history-view">
             <div class="card-header">
+                <button onclick="goHome()">← Back</button>
                 <button id="export-btn">Export CSV</button>
                 <div id="monthSwitcher">
                     <button id="prevMonth">←</button>
@@ -69,13 +74,20 @@
             <ul id="expense-list"></ul>
         </section>
 
-        <section class="card">
+        <section class="card settings" id="settings-view">
+
+            <button onclick="goHome()">← Back</button>
             <h2>Categories</h2>
             <form id="category-form">
                 <input name="category-name" placeholder="New category" />
                 <button>Add</button>
             </form>
             <ul id="category-list"></ul>
+        </section>
+
+        <section class="bottomRow" id="bottomNavigation">
+            <button id="historyBtn">history</button>
+            <button id="settingsBtn">settings</button>
         </section>
     </main>
 

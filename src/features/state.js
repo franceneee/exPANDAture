@@ -1,6 +1,7 @@
 export const state = {
     activeDate: new Date(),
-    editingExpense: null   // null = creating new
+    editingExpense: null,   // null = creating new
+    view: "home"
 };
 
 export function initState() {

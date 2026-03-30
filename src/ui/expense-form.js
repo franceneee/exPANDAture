@@ -3,7 +3,7 @@ import { state } from "../features/state.js";
 import { renderMonthlySummary } from "./summary.js";
 import { renderMonthlyExpenses } from "./expense-list.js";
 import { setupMealTypeUI, hideMealTypeUI } from "./meal-type-ui.js";
-import { getCategoryMap } from "../app.js";
+import { getCategoryMap, renderApp } from "../app.js";
 
 function getMonthKey(dateStr) {
     const d = new Date(dateStr);
@@ -17,6 +17,7 @@ export function setupExpenseForm() {
     const today = new Date();
     dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     document.getElementById("resetBtn").onclick = () => { resetFormMode(); };
+    document.getElementById("closeBtn").onclick = () => { state.view = "home"; renderApp(); };
 
     f.onsubmit = async e => {
         e.preventDefault();
@@ -40,6 +41,8 @@ export function setupExpenseForm() {
             });
 
             resetFormMode();
+            renderMonthlyExpenses();
+            renderMonthlySummary();
         } else {
             await addExpense({
                 id: crypto.randomUUID(),
@@ -99,6 +102,8 @@ export function resetFormMode() {
 
     const form = document.getElementById("expense-form");
     form.reset();
+    const mealWrapper = form.querySelector("#meal-type-wrapper");
+    mealWrapper.style.display = "none";
 
     const dateInput = form.querySelector("input[name='date']");
     const today = new Date();
