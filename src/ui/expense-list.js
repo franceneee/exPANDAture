@@ -1,6 +1,6 @@
-import { getCategoryMap } from "../app.js";
+import { getCategoryMap, renderApp } from "../app.js";
 import { getExpensesByMonthKey, getExpenseById, deleteExpense } from "../features/expenses.js";
-import { getActiveMonthKey } from "../features/state.js";
+import { getActiveMonthKey, state } from "../features/state.js";
 import { formatSmartDate, getDayEmoji } from "../features/utils.js";
 import { openEditForm } from "./expense-form.js";
 
@@ -92,7 +92,12 @@ export function renderGroupedByDay(expenses, list, categoryMap) {
         };
 
         li.querySelector("#editBtn").onclick = async () => {
-          await getExpenseById(e.id).then(openEditForm);
+          const expense = await getExpenseById(e.id);
+          state.view = "expenseForm";
+          state.editingExpense = true;
+          renderApp();
+          await openEditForm(expense);
+          renderApp()
         };
 
         breakdown.appendChild(li);

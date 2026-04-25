@@ -21,11 +21,18 @@ export function setupExpenseForm() {
 
     f.onsubmit = async e => {
         e.preventDefault();
+        const rawAmount = Number(f.amount.value);
+
+        // make this prettier next time
+        if (!rawAmount || isNaN(rawAmount)) {
+            alert("Please enter a valid amount");
+            return;
+        }
 
         const base = {
             description: f.description.value,
             date: f.date.value,
-            amount: Math.round(Number(f.amount.value) * 100),
+            amount: Math.round(Number(rawAmount) * 100),
             monthKey: getMonthKey(f.date.value),
             categoryId: f.category.value || null,
             mealType: f["meal-type-select"]?.value || null,
@@ -34,13 +41,16 @@ export function setupExpenseForm() {
 
         if (state.editingExpense) {
             setupMealTypeUI();
-            // 🔁 EDIT MODE
             await updateExpense({
                 ...state.editingExpense,
                 ...base
             });
 
+            state.editingExpense = null;
+            state.view = "history";
+
             resetFormMode();
+            renderApp();
             renderMonthlyExpenses();
             renderMonthlySummary();
         } else {
@@ -56,6 +66,7 @@ export function setupExpenseForm() {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             }).then(() => {
+                renderApp();
                 renderMonthlyExpenses();
             }).then(() => {
                 renderMonthlySummary();
@@ -110,4 +121,15 @@ export function resetFormMode() {
     dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     document.getElementById("form-title").textContent = "Add Expense";
     document.getElementById("submitBtn").textContent = "add";
+}
+
+export function cancelForm() {
+    if (state.editingExpense) {
+        state.editingExpense = null;
+        state.view = "month";
+    } else {
+        state.view = "home";
+    }
+
+    renderApp();
 }
