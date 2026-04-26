@@ -11,12 +11,23 @@ import { renderMonthlyExpenses } from "./ui/expense-list.js";
 import { setupMealTypeUI } from "./ui/meal-type-ui.js";
 import { setupMonthSwitcher } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
+import { renderCategoryHeatmap } from "./ui/tracker.js";
 
 let categoryMap = {};
+let heatmapMode = "month";
 
 export function getCategoryMap() {
   return categoryMap;
 }
+
+window.setMode = (mode) => {
+  heatmapMode = mode;
+  renderCategoryHeatmap({
+    containerId: "heatmap",
+    categoryId: 1,
+    mode
+  });
+};
 
 async function initApp() {
   await openDB();
@@ -24,6 +35,7 @@ async function initApp() {
   setupMonthSwitcher();
   await seedCategoriesIfEmpty();
   categoryMap = await populateCategorySelect();
+  await renderHome();
   await populateCurrencySelect();
   setupExpenseForm();
   setupCategoryManager();
@@ -44,6 +56,21 @@ dateInput.addEventListener("click", () => {
     dateInput.showPicker();
   }
 });
+
+document.querySelector("#category").onchange = async () => {
+   await renderHome();
+};
+
+async function renderHome() {
+  const categorySelect = document.getElementById("category");
+  const categoryId = categorySelect ? categorySelect.value : 1;
+  console.log("Rendering home with categoryId", categoryId);
+  await renderCategoryHeatmap({
+    containerId: "heatmap",
+    categoryId: categoryId,
+    mode: heatmapMode
+  });
+}
 
 export function renderApp() {
   const home = document.getElementById("home-view");

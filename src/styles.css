@@ -164,3 +164,42 @@ input[type='number']::-webkit-inner-spin-button {
     text-align: center;
     padding: 20px;
 }
+
+#heatmap {
+    display: grid;
+    grid-template-columns: repeat(7, 14px);
+    /* Mon → Sun */
+    grid-auto-rows: 14px;
+    grid-auto-flow: row;
+    gap: 4px;
+}
+
+/* base */
+.heat-cell {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: #ebedf0;
+}
+
+/* intensity */
+.heat-cell[data-count="1"] {
+    background: #c6e48b;
+}
+
+.heat-cell[data-count="2"] {
+    background: #7bc96f;
+}
+
+.heat-cell[data-count="3"] {
+    background: #239a3b;
+}
+
+.heat-cell[data-count="4"] {
+    background: #196127;
+}
+
+/* outside month */
+.out-month {
+    opacity: 0.1;
+}

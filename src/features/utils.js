@@ -63,3 +63,7 @@ export function renderTodayDate() {
 
     document.getElementById("today-date").textContent = text;
 }
+
+export function calculateTotalCount(countMap) {
+    return Object.values(countMap).reduce((a, b) => a + b, 0);
+}

@@ -27,16 +27,42 @@ export async function getExpensesByMonthKey(monthKey) {
 }
 
 export async function getExpenseById(id) {
-  const store = await getStore("expenses", "readonly");
-  const request = store.get(id);
-  return requestToPromise(request);
+    const store = await getStore("expenses", "readonly");
+    const request = store.get(id);
+    return requestToPromise(request);
 }
 
 export async function updateExpense(expense) {
-  const store = await getStore("expenses", "readwrite");
+    const store = await getStore("expenses", "readwrite");
 
-  expense.updatedAt = new Date().toISOString();
+    expense.updatedAt = new Date().toISOString();
 
-  const request = store.put(expense);   // put = insert OR update by key
-  return requestToPromise(request);
+    const request = store.put(expense);   // put = insert OR update by key
+    return requestToPromise(request);
+}
+
+export async function getExpensesByDateRange(start, end) {
+    const store = await getStore("expenses", "readonly");
+    const all = await requestToPromise(store.getAll());
+
+    return all.filter(e => e.date >= start && e.date <= end);
+}
+
+export function getMonthRange(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    const start = new Date(year, month, 1).toISOString().slice(0, 10);
+    const end = new Date(year, month + 1, 0).toISOString().slice(0, 10);
+
+    return { start, end };
+}
+
+export function getYearRange(date) {
+    const year = date.getFullYear();
+
+    return {
+        start: `${year}-01-01`,
+        end: `${year}-12-31`
+    };
 }

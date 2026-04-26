@@ -23,6 +23,14 @@
                 <button id="addExpenseBtn" class="material-symbols-outlined button">add</button>
             </div>
         </section>
+        <div class="heatmap-card">
+            <label for="category">Category</label>
+            <select id="category" name="category"></select>
+            <button onclick="setMode('month')">Month</button>
+            <button onclick="setMode('year')">Year</button>
+            <div id="heatmap"></div>
+            <div id="heatmap-sum"></div>
+        </div>
         <section class="card expense-form" id="expense-form-view">
             <form id="expense-form">
                 <h3 id="form-title">Add Expense</h3>

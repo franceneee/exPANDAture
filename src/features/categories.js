@@ -23,3 +23,9 @@ export async function deleteCategory(id) {
     const s = await getStore("categories", "readwrite");
     s.delete(id);
 }
+
+export function filterByCategory(expenses, categoryId) {
+    return expenses.filter(
+        e => String(e.categoryId) === String(categoryId)
+    );
+}
