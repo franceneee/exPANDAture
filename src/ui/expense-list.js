@@ -1,5 +1,5 @@
 import { getCategoryMap, renderApp } from "../app.js";
-import { getExpensesByMonthKey, getExpenseById, deleteExpense } from "../features/expenses.js";
+import { getExpensesByMonthKey, getExpenseById, deleteExpense, groupByCategory } from "../features/expenses.js";
 import { getActiveMonthKey, state } from "../features/state.js";
 import { formatSmartDate, getDayEmoji } from "../features/utils.js";
 import { openEditForm } from "./expense-form.js";
@@ -108,4 +108,37 @@ export function renderGroupedByDay(expenses, list, categoryMap) {
 
       list.appendChild(dayContainer);
     });
+}
+
+let categoryChartInstance;
+
+function renderCategoryPie(expenses) {
+  const ctx = document.getElementById("category-chart");
+  if (!ctx) return;
+
+  if (categoryChartInstance) {
+    categoryChartInstance.destroy();
+  }
+
+  const categoryMap = getCategoryMap();
+  const grouped = groupByCategory(expenses);
+
+  const labels = Object.keys(grouped).map(id => categoryMap[id] || "Other");
+  const data = Object.values(grouped).map(v => v / 100);
+
+  categoryChartInstance = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels,
+      datasets: [{
+        data
+      }]
+    }
+  });
+}
+
+export async function renderAnalytics() {
+  const expenses = await getExpensesByMonthKey(getActiveMonthKey());
+
+  renderCategoryPie(expenses);
 }

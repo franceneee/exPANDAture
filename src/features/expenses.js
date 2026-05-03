@@ -66,3 +66,15 @@ export function getYearRange(date) {
         end: `${year}-12-31`
     };
 }
+
+export function groupByCategory(expenses) {
+    const map = {};
+
+    for (const e of expenses) {
+        if (!Number.isFinite(e.amount)) continue;
+
+        map[e.categoryId] = (map[e.categoryId] || 0) + e.amount;
+    }
+
+    return map;
+}

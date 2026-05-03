@@ -7,7 +7,7 @@ import { setupCategoryManager } from "./ui/category-manager.js";
 import { populateCategorySelect } from "./ui/category-select.js";
 import { populateCurrencySelect } from "./ui/currency-select.js";
 import { setupExpenseForm } from "./ui/expense-form.js";
-import { renderMonthlyExpenses } from "./ui/expense-list.js";
+import { renderMonthlyExpenses, renderAnalytics } from "./ui/expense-list.js";
 import { setupMealTypeUI } from "./ui/meal-type-ui.js";
 import { setupMonthSwitcher } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
@@ -20,11 +20,16 @@ export function getCategoryMap() {
   return categoryMap;
 }
 
+function getHeatmapCategoryId() {
+  const categorySelect = document.getElementById("heatmap-category");
+  return categorySelect ? Number(categorySelect.value) : 1;
+}
+
 window.setMode = (mode) => {
   heatmapMode = mode;
   renderCategoryHeatmap({
     containerId: "heatmap",
-    categoryId: 1,
+    categoryId: getHeatmapCategoryId(),
     mode
   });
 };
@@ -35,6 +40,16 @@ async function initApp() {
   setupMonthSwitcher();
   await seedCategoriesIfEmpty();
   categoryMap = await populateCategorySelect();
+
+  const heatmapCategorySelect = document.getElementById("heatmap-category");
+  heatmapCategorySelect?.addEventListener("change", () => {
+    renderCategoryHeatmap({
+      containerId: "heatmap",
+      categoryId: getHeatmapCategoryId(),
+      mode: heatmapMode
+    });
+  });
+
   await renderHome();
   await populateCurrencySelect();
   setupExpenseForm();
@@ -57,17 +72,29 @@ dateInput.addEventListener("click", () => {
   }
 });
 
-document.querySelector("#category").onchange = async () => {
-   await renderHome();
-};
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const tab = btn.dataset.tab;
+
+    document.getElementById("list-tab").style.display =
+      tab === "list" ? "block" : "none";
+
+    document.getElementById("analytics-tab").style.display =
+      tab === "analytics" ? "block" : "none";
+
+    if (tab === "analytics") renderAnalytics();
+  };
+});
 
 async function renderHome() {
-  const categorySelect = document.getElementById("category");
-  const categoryId = categorySelect ? categorySelect.value : 1;
+  const categoryId = getHeatmapCategoryId();
   console.log("Rendering home with categoryId", categoryId);
   await renderCategoryHeatmap({
     containerId: "heatmap",
-    categoryId: categoryId,
+    categoryId,
     mode: heatmapMode
   });
 }

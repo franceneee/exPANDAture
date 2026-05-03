@@ -104,6 +104,9 @@ export function renderHeatmap({ containerId, countMap, year, month }) {
         cell.title = `${date}: ${count} entries`;
 
         container.appendChild(cell);
+
+        categoryMap = getCategoryMap();
+        console.log(categoryMap);
     });
 }
 

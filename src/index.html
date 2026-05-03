@@ -7,7 +7,8 @@
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,arrow_forward_ios,close,delete,edit,restore_page,save" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,arrow_forward_ios,close,delete,edit,list_alt,pie_chart,restore_page,save" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -23,14 +24,6 @@
                 <button id="addExpenseBtn" class="material-symbols-outlined button">add</button>
             </div>
         </section>
-        <div class="heatmap-card">
-            <label for="category">Category</label>
-            <select id="category" name="category"></select>
-            <button onclick="setMode('month')">Month</button>
-            <button onclick="setMode('year')">Year</button>
-            <div id="heatmap"></div>
-            <div id="heatmap-sum"></div>
-        </div>
         <section class="card expense-form" id="expense-form-view">
             <form id="expense-form">
                 <h3 id="form-title">Add Expense</h3>
@@ -45,7 +38,7 @@
                 </div>
                 <div>
                     <label for="category">Category</label>
-                    <select id="category" name="category"></select>
+                    <select id="category" name="category" data-category-dropdown></select>
                     <label id="meal-type-wrapper" style="display:none;">
                         Meal type
                         <select id="meal-type-select" name="meal-type-select">
@@ -70,16 +63,36 @@
         </section>
 
         <section class="card history" id="history-view">
-            <div class="card-header">
-                <button onclick="goHome()">← Back</button>
-                <button id="export-btn">Export CSV</button>
-                <div id="monthSwitcher">
-                    <button id="prevMonth">←</button>
-                    <span id="currentMonth"></span>
-                    <button id="nextMonth">→</button>
+            <div class="tabs">
+                <button class="tab active material-symbols-outlined" data-tab="list">list_alt</button>
+                <button class="tab material-symbols-outlined" data-tab="analytics">pie_chart</button>
+            </div>
+            &nbsp;
+            <div id="list-tab" class="tab-content">
+                <div class="card-header">
+                    <button onclick="goHome()">← Back</button>
+                    <button id="export-btn">Export CSV</button>
+                    <div id="monthSwitcher">
+                        <button id="prevMonth">←</button>
+                        <span id="currentMonth"></span>
+                        <button id="nextMonth">→</button>
+                    </div>
+                </div>
+                <ul id="expense-list"></ul>
+            </div>
+
+            <div id="analytics-tab" class="tab-content" style="display:none;">
+                <canvas id="category-chart"></canvas>
+
+                <div class="heatmap-card">
+                    <label for="heatmap-category">Category</label>
+                    <select id="heatmap-category" name="heatmap-category" data-category-dropdown></select>
+                    <button onclick="setMode('month')">Month</button>
+                    <button onclick="setMode('year')">Year</button>
+                    <div id="heatmap"></div>
+                    <div id="heatmap-sum"></div>
                 </div>
             </div>
-            <ul id="expense-list"></ul>
         </section>
 
         <section class="card settings" id="settings-view">
