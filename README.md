@@ -17,7 +17,8 @@ exPANDAture/
 │   ├─ categories.js
 │   ├─ expenses.js
 │   ├─ export.js
-│   └─ state.js
+|   ├─ state.js
+│   └─ utils.js
 │
 ├─ models/
 │   ├─ category.js
@@ -25,14 +26,15 @@ exPANDAture/
 │   └─ expense.js
 |
 └─ ui/
-    ├─ expense-form.js
-    ├─ expense-list.js
     ├─ category-manager.js
     ├─ category-select.js
     ├─ currency-select.js
+    ├─ expense-form.js
+    ├─ expense-list.js
     ├─ list.js
     ├─ meal-type-ui.js
     ├─ month-switcher.js
-    └─ summary.js
+    ├─ summary.js
+    └─ tracker.js
 
 ```
