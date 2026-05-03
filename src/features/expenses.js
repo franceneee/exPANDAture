@@ -1,4 +1,5 @@
 import { getStore, requestToPromise } from "../db/db.js";
+import { formatLocalDate } from "./utils.js";
 
 export async function addExpense(expense) {
     const s = await getStore("expenses", "readwrite");
@@ -52,8 +53,8 @@ export function getMonthRange(date) {
     const year = date.getFullYear();
     const month = date.getMonth();
 
-    const start = new Date(year, month, 1).toISOString().slice(0, 10);
-    const end = new Date(year, month + 1, 0).toISOString().slice(0, 10);
+    const start = formatLocalDate(new Date(year, month, 1));
+    const end = formatLocalDate(new Date(year, month + 1, 0));
 
     return { start, end };
 }
@@ -62,8 +63,8 @@ export function getYearRange(date) {
     const year = date.getFullYear();
 
     return {
-        start: `${year}-01-01`,
-        end: `${year}-12-31`
+        start: formatLocalDate(new Date(year, 0, 1)),
+        end: formatLocalDate(new Date(year, 11, 31))
     };
 }
 

@@ -1,7 +1,7 @@
 import { getMonthRange, getYearRange, getExpensesByDateRange } from "../features/expenses.js";
 import { filterByCategory } from "../features/categories.js";
-import { state } from "../features/state.js";
-import { getActiveMonthKey } from "../features/state.js";
+import { state, getActiveMonthKey } from "../features/state.js";
+import { formatLocalDate } from "../features/utils.js";
 import { getCategoryMap } from "../app.js";
 
 function countByDate(expenses) {
@@ -17,14 +17,6 @@ function countByDate(expenses) {
 export function generateCalendarGrid(year, month) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-
-    // Helper to format date in local time (not UTC)
-    const formatLocalDate = (d) => {
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${y}-${m}-${day}`;
-    };
 
     // Calculate days to go back to Monday
     // Sunday (0) → 6 days back, Monday (1) → 0 days back, Tuesday (2) → 1 day back, etc.
@@ -58,9 +50,12 @@ function calculateHabitSum(countMap, year, month) {
             .toISOString()
             .slice(0, 10);
 
-        if (countMap[date] > 0)
+        if (countMap[date] > 0) {
             sum += countMap[date];
+            console.log(date, countMap[date]);
+        }
     }
+
 
     return (sum / 100).toFixed(2);
 }
