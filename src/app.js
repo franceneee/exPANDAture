@@ -12,6 +12,7 @@ import { setupMealTypeUI } from "./ui/meal-type-ui.js";
 import { setupMonthSwitcher } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
 import { renderCategoryHeatmap } from "./ui/tracker.js";
+import { setupPrivacyLock } from "./features/privacy-lock.js";
 import { setupThemeToggle } from "./features/theme.js";
 
 let categoryMap = {};
@@ -59,6 +60,7 @@ async function initApp() {
   await renderMonthlySummary();
   setupMealTypeUI();
   setupThemeToggle();
+  setupPrivacyLock();
 }
 
 initApp().catch(console.error);

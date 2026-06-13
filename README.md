@@ -1,6 +1,15 @@
 # exPANDAture
 an expenditure tracking app, created for fun
 
+## Privacy model
+
+- Expenses and categories stay in the browser's IndexedDB and are not sent to a server.
+- An optional local PIN gate can be enabled in **Grove > Privacy lock**.
+- The PIN verifier is salted and stretched with PBKDF2; the raw PIN is never stored.
+- The PIN gate protects against casual access, but it does **not** encrypt IndexedDB against someone with device or browser-profile access. Use your phone's screen lock as the primary security boundary.
+- Exported CSV files are unencrypted, so store or share them carefully.
+
+
 ## Folder Structure
 ```
 exPANDAture/
