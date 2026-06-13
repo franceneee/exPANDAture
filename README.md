@@ -1,5 +1,5 @@
 # exPANDAture
-an expenditure tracking app, created for fun
+A local-first, panda-powered expenditure tracker (created for fun).
 
 ## Privacy model
 
@@ -9,6 +9,9 @@ an expenditure tracking app, created for fun
 - The PIN gate protects against casual access, but it does **not** encrypt IndexedDB against someone with device or browser-profile access. Use your phone's screen lock as the primary security boundary.
 - Exported CSV files are unencrypted, so store or share them carefully.
 
+## PWA
+
+Serve the `src` directory over HTTPS (or localhost), then use your browser's **Add to Home Screen** action. The service worker caches the app shell for offline use.
 
 ## Folder Structure
 ```

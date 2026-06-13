@@ -1,0 +1,17 @@
+{
+  "name": "exPANDAture",
+  "short_name": "exPANDA",
+  "description": "A calm, private, panda-powered expense tracker.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f1e4",
+  "theme_color": "#2f6047",
+  "icons": [
+    {
+      "src": "website-icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
