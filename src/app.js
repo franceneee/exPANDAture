@@ -9,7 +9,7 @@ import { populateCurrencySelect } from "./ui/currency-select.js";
 import { setupExpenseForm } from "./ui/expense-form.js";
 import { renderMonthlyExpenses, renderAnalytics } from "./ui/expense-list.js";
 import { setupMealTypeUI } from "./ui/meal-type-ui.js";
-import { setupMonthSwitcher } from "./ui/month-switcher.js";
+import { setupMonthSwitcher, resetToCurrentMonth } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
 import { renderCategoryHeatmap } from "./ui/tracker.js";
 import { setupPrivacyLock } from "./features/privacy-lock.js";
@@ -108,7 +108,18 @@ export function renderApp() {
   const history = document.getElementById("history-view");
   const settings = document.getElementById("settings-view");
   const expenseForm = document.getElementById("expense-form-view");
+  const activeNavigation = state.view === "expenseForm" ? "home" : state.view;
   console.log("Rendering app, current view:", state.view);
+
+  document.querySelectorAll(".nav-button").forEach(button => {
+    const isActive = button.id === `${activeNavigation}Btn`;
+    button.classList.toggle("active", isActive);
+    if (isActive) {
+      button.setAttribute("aria-current", "page");
+    } else {
+      button.removeAttribute("aria-current");
+    }
+  });
 
   switch (state.view) {
     case "home":
@@ -141,9 +152,15 @@ export function renderApp() {
   }
 }
 
-document.querySelector("#historyBtn").onclick = () => {
+document.querySelector("#historyBtn").onclick = async () => {
   state.view = "history";
   renderApp();
+  document.querySelectorAll(".tab").forEach(button =>
+    button.classList.toggle("active", button.dataset.tab === "list")
+  );
+  document.getElementById("list-tab").style.display = "block";
+  document.getElementById("analytics-tab").style.display = "none";
+  await resetToCurrentMonth();
 };
 
 document.querySelector("#settingsBtn").onclick = () => {
@@ -156,10 +173,11 @@ document.querySelector("#addExpenseBtn").onclick = () => {
   renderApp();
 };
 
-window.goHome = () => {
+window.goHome = async () => {
   console.log("Going home");
   state.view = "home";
   renderApp();
+  await renderMonthlySummary();
 };
 
 renderApp();

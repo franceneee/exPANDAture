@@ -1,6 +1,5 @@
 import { getActiveDate, setActiveDate, initState } from "../features/state.js";
 import { renderMonthlyExpenses } from "./expense-list.js";
-import { renderMonthlySummary } from "./summary.js";
 
 function updateLabel() {
     const d = getActiveDate();
@@ -29,5 +28,10 @@ export function setupMonthSwitcher() {
 async function refresh() {
     updateLabel();
     await renderMonthlyExpenses();
-    await renderMonthlySummary();
+}
+
+export async function resetToCurrentMonth() {
+    const today = new Date();
+    setActiveDate(new Date(today.getFullYear(), today.getMonth(), 1));
+    await refresh();
 }
