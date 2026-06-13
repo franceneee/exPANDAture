@@ -12,6 +12,7 @@ import { setupMealTypeUI } from "./ui/meal-type-ui.js";
 import { setupMonthSwitcher } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
 import { renderCategoryHeatmap } from "./ui/tracker.js";
+import { setupThemeToggle } from "./features/theme.js";
 
 let categoryMap = {};
 let heatmapMode = "month";
@@ -57,6 +58,7 @@ async function initApp() {
   await renderMonthlyExpenses();
   await renderMonthlySummary();
   setupMealTypeUI();
+  setupThemeToggle();
 }
 
 initApp().catch(console.error);
@@ -160,3 +162,14 @@ window.goHome = () => {
 
 renderApp();
 renderTodayDate();
+
+if ("serviceWorker" in navigator) {
+  const isLocalDevelopment = ["localhost", "127.0.0.1"].includes(location.hostname);
+  if (isLocalDevelopment) {
+    navigator.serviceWorker.getRegistrations()
+      .then(registrations => registrations.forEach(registration => registration.unregister()))
+      .catch(console.error);
+  } else {
+    navigator.serviceWorker.register("./service-worker.js").catch(console.error);
+  }
+}
