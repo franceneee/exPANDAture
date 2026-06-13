@@ -1,117 +1,183 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Expense Tracker</title>
-    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#2f6047" />
+    <meta name="description" content="A calm, private, panda-powered expense tracker." />
+    <title>exPANDAture</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="website-icon.png" type="image/png" />
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,arrow_forward_ios,close,delete,edit,list_alt,pie_chart,restore_page,save" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward_ios,close,delete,edit,list_alt,pie_chart,restore_page,save" />
+    <script>
+        document.documentElement.dataset.theme =
+            localStorage.getItem("expandature_theme") === "red-panda" ? "red-panda" : "panda"; </script>
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
+    <div class="bamboo bamboo-left" aria-hidden="true"></div>
+    <div class="bamboo bamboo-right" aria-hidden="true"></div>
+    <div id="lock-screen" class="lock-screen" hidden>
+        <div class="lock-card">
+            <div class="panda-face panda-face-large" aria-hidden="true"><span class="ear ear-left"></span><span
+                    class="ear ear-right"></span><span class="eye eye-left"></span><span
+                    class="eye eye-right"></span><span class="nose"></span></div>
+            <p class="eyebrow">PRIVATE BAMBOO GROVE</p>
+            <h2>Welcome back</h2>
+            <p>Your spending journal is resting behind this gate.</p>
+            <form id="unlock-form">
+                <label for="unlock-pin">Enter your PIN</label>
+                <input id="unlock-pin" name="pin" type="password" inputmode="numeric" minlength="4" maxlength="12"
+                    autocomplete="current-password" placeholder="4-12 digits" required />
+                <p id="unlock-message" class="form-message" role="status"></p>
+                <button type="submit" class="primary-button">Open my grove</button>
+            </form>
+        </div>
+    </div>
     <main class="container">
-
-        <h1>Expense Tracker</h1>
-        <section class="card" id="home-view">
-            <div class="monthly-card">
-                <div id="today-date">000</div>
+        <header class="app-header">
+            <div class="brand-mark">
+                <div class="panda-face" aria-hidden="true"><span class="ear ear-left"></span><span
+                        class="ear ear-right"></span><span class="eye eye-left"></span><span
+                        class="eye eye-right"></span><span class="nose"></span></div>
                 <div>
-                    Total this month: <strong id="monthlyTotal">0.00</strong>
+                    <p id="brand-kicker" class="eyebrow">MY BAMBOO BUDGET</p>
+                    <h1>ex<span>PANDA</span>ture</h1>
                 </div>
-                <button id="addExpenseBtn" class="material-symbols-outlined button">add</button>
             </div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle" title="Switch animal theme"
+                    aria-label="Switch to red panda theme"><span class="theme-toggle-icon">◐</span><span
+                        id="theme-toggle-label">Red panda</span></button>
+                <button id="lock-now-header" class="icon-button" title="Lock app" aria-label="Lock app">●</button>
+            </div>
+        </header>
+        <section class="card hero-card" id="home-view">
+            <div class="hero-copy">
+                <p id="today-date" class="date-chip">Today</p>
+                <p class="muted-label">Nibbled this month</p>
+                <div class="monthly-total"><span class="currency-mark">$</span><strong id="monthlyTotal">0.00</strong>
+                </div>
+                <p id="mascot-note" class="panda-note">Small bites add up. Keep it calm, keep it tracked.</p>
+            </div>
+            <div class="panda-body" aria-hidden="true">
+                <div class="panda-face panda-face-large"><span class="ear ear-left"></span><span
+                        class="ear ear-right"></span><span class="eye eye-left"></span><span
+                        class="eye eye-right"></span><span class="nose"></span></div>
+                <span class="belly"></span><span class="arm arm-left"></span><span class="arm arm-right"></span><span
+                    class="bamboo-snack"></span>
+            </div>
+            <button id="addExpenseBtn" class="add-expense-button"><span>+</span> Log a new expense</button>
         </section>
         <section class="card expense-form" id="expense-form-view">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">NEW BAMBOO LEAF</p>
+                    <h2 id="form-title">Add Expense</h2>
+                </div><button type="button" id="closeBtn" class="icon-button" aria-label="Close">×</button>
+            </div>
             <form id="expense-form">
-                <h3 id="form-title">Add Expense</h3>
-                <div>
-                    <label for="date">Date</label>
-                    <input id="date" type="date" name="date" />
+                <div class="field-row"><label for="date">When?</label><input id="date" type="date" name="date" /></div>
+                <div class="field-row"><label for="amount">How much?</label>
+                    <div class="amount-row"><select id="currency" name="currency" aria-label="Currency"></select><input
+                            id="amount" type="number" name="amount" step="0.01" placeholder="0.00" /></div>
                 </div>
-                <div>
-                    <label>Amount</label>
-                    <select id="currency" name="currency"></select>
-                    <input type="number" name="amount" step="0.01" placeholder="Amount" />
+                <div class="field-row"><label for="category">Which basket?</label><select id="category" name="category"
+                        data-category-dropdown></select>
+                    <label id="meal-type-wrapper" style="display:none;">Meal type<select id="meal-type-select"
+                            name="meal-type-select">
+                            <option value="">Not specified</option>
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                        </select></label>
                 </div>
-                <div>
-                    <label for="category">Category</label>
-                    <select id="category" name="category" data-category-dropdown></select>
-                    <label id="meal-type-wrapper" style="display:none;">
-                        Meal type
-                        <select id="meal-type-select" name="meal-type-select">
-                            <option value="">-</option>
-                            <option value="breakfast">breakfast</option>
-                            <option value="lunch">lunch</option>
-                            <option value="dinner">dinner</option>
-                        </select>
-                    </label>
-                </div>
-                <div>
-                    <label for="description">Description</label>
-                    <br />
-                    <input id="description" type="text" name="description" placeholder="..." />
-                </div>
-                <div>
-                    <button type="submit" id="submitBtn" class="material-symbols-outlined button">add</button>
-                    <button type="button" id="resetBtn" class="material-symbols-outlined button">restore_page</button>
-                    <button type="button" id="closeBtn" class="material-symbols-outlined button">close</button>
+                <div class="field-row"><label for="description">A little note</label><input id="description" type="text"
+                        name="description" placeholder="What was this for?" /></div>
+                <div class="form-actions">
+                    <button type="button" id="resetBtn"
+                        class="secondary-button material-symbols-outlined">restore_page</button>
+                    <button type="submit" id="submitBtn" class="primary-button material-symbols-outlined">save</button>
                 </div>
             </form>
         </section>
-
         <section class="card history" id="history-view">
-            <div class="tabs">
-                <button class="tab active material-symbols-outlined" data-tab="list">list_alt</button>
-                <button class="tab material-symbols-outlined" data-tab="analytics">pie_chart</button>
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">BAMBOO TRAIL</p>
+                    <h2>Spending history</h2>
+                </div><button onclick="goHome()" class="icon-button" aria-label="Back home">×</button>
             </div>
-            &nbsp;
+            <div class="tabs"><button class="tab active" data-tab="list">Leaf log</button><button class="tab"
+                    data-tab="analytics">Panda patterns</button></div>
             <div id="list-tab" class="tab-content">
                 <div class="card-header">
-                    <button onclick="goHome()">← Back</button>
-                    <button id="export-btn">Export CSV</button>
-                    <div id="monthSwitcher">
-                        <button id="prevMonth">←</button>
-                        <span id="currentMonth"></span>
-                        <button id="nextMonth">→</button>
-                    </div>
+                    <div id="monthSwitcher"><button id="prevMonth" class="icon-button"
+                            aria-label="Previous month">‹</button><span id="currentMonth"></span><button id="nextMonth"
+                            class="icon-button" aria-label="Next month">›</button></div>
+                    <div id="trail-month-total" class="trail-month-total">$0.00 spent</div><button id="export-btn"
+                        class="secondary-button">Export CSV</button>
                 </div>
                 <ul id="expense-list"></ul>
             </div>
-
             <div id="analytics-tab" class="tab-content" style="display:none;">
-                <canvas id="category-chart"></canvas>
-
+                <div class="chart-wrap"><canvas id="category-chart"></canvas></div>
                 <div class="heatmap-card">
-                    <label for="heatmap-category">Category</label>
-                    <select id="heatmap-category" name="heatmap-category" data-category-dropdown></select>
-                    <button onclick="setMode('month')">Month</button>
-                    <button onclick="setMode('year')">Year</button>
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">ACTIVITY</p>
+                            <h3>Bamboo calendar</h3>
+                        </div><strong id="heatmap-sum">$0.00</strong>
+                    </div><select id="heatmap-category" name="heatmap-category" data-category-dropdown></select>
+                    <div class="segmented"><button onclick="setMode('month')">Month</button><button
+                            onclick="setMode('year')">Year</button></div>
                     <div id="heatmap"></div>
-                    <div id="heatmap-sum"></div>
                 </div>
             </div>
         </section>
-
         <section class="card settings" id="settings-view">
-
-            <button onclick="goHome()">← Back</button>
-            <h2>Categories</h2>
-            <form id="category-form">
-                <input name="category-name" placeholder="New category" />
-                <button>Add</button>
-            </form>
-            <ul id="category-list"></ul>
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">YOUR GROVE</p>
+                    <h2>Settings</h2>
+                </div><button onclick="goHome()" class="icon-button" aria-label="Back home">×</button>
+            </div>
+            <div class="settings-block">
+                <h3>Choose your forest friend</h3>
+                <p class="setting-note">The app works exactly the same. Only the habitat and resident panda change.</p>
+                <div class="theme-picker"><button type="button" data-theme-choice="panda"><span
+                            class="choice-dot panda-dot"></span>Giant panda</button><button type="button"
+                        data-theme-choice="red-panda"><span class="choice-dot red-panda-dot"></span>Red panda</button>
+                </div>
+            </div>
+            <div class="settings-block">
+                <h3>Privacy lock</h3>
+                <p class="setting-note">A PIN keeps casual visitors out. Your data stays only on this device, but this
+                    is not full database encryption.</p>
+                <form id="pin-setup-form"><label for="new-pin">Set or change PIN</label><input id="new-pin" name="pin"
+                        type="password" inputmode="numeric" minlength="4" maxlength="12" placeholder="4-12 digits"
+                        required /><button class="primary-button">Save PIN</button>
+                    <p id="pin-setup-message" class="form-message" role="status"></p>
+                </form>
+                <button id="lock-now-settings" class="secondary-button full-width">Lock now</button>
+            </div>
+            <div class="settings-block">
+                <h3>Spending baskets</h3>
+                <form id="category-form" class="inline-form"><input name="category-name"
+                        placeholder="New category" /><button class="primary-button">Add</button></form>
+                <ul id="category-list"></ul>
+            </div>
         </section>
-
-        <section class="bottomRow" id="bottomNavigation">
-            <button id="historyBtn">history</button>
-            <button id="settingsBtn">settings</button>
-        </section>
+        <nav class="bottomRow" id="bottomNavigation" aria-label="Main navigation">
+            <button id="homeBtn" onclick="goHome()" class="nav-button"><span>●</span>Home</button><button
+                id="historyBtn" class="nav-button"><span>☷</span>Trail</button><button id="settingsBtn"
+                class="nav-button"><span>✦</span>Grove</button>
+        </nav>
     </main>
-
     <script type="module" src="app.js"></script>
 </body>
 

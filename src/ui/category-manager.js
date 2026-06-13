@@ -6,24 +6,24 @@ export async function setupCategoryManager() {
   const list = document.getElementById("category-list");
 
   async function refresh() {
-    const cats = await getCategories();
+    const categories = await getCategories();
     list.innerHTML = "";
 
-    cats.forEach(c => {
-      const li = document.createElement("li");
-      li.className = "expense-item";
-      li.innerHTML = `<span>${c.name}</span><button>✕</button>`;
-      li.querySelector("button").onclick = async () => {
-        await deleteCategory(c.id);
+    categories.forEach(category => {
+      const item = document.createElement("li");
+      item.className = "expense-item";
+      item.innerHTML = `<span>${category.name}</span><button aria-label="Delete ${category.name}">×</button>`;
+      item.querySelector("button").onclick = async () => {
+        await deleteCategory(category.id);
         refresh();
         populateCategorySelect();
       };
-      list.appendChild(li);
+      list.appendChild(item);
     });
   }
 
-  form.onsubmit = async e => {
-    e.preventDefault();
+  form.onsubmit = async event => {
+    event.preventDefault();
     await addCategory(form["category-name"].value);
     form.reset();
     refresh();

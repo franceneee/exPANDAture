@@ -28,9 +28,12 @@ export async function renderMonthlyExpenses() {
 
   const expenses = await getExpensesByMonthKey(getActiveMonthKey());
   const groups = groupExpensesByDay(expenses);
+  const monthlyTotal = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+  document.getElementById("trail-month-total").textContent =
+    `$${(monthlyTotal / 100).toFixed(2)} spent`;
 
   if (Object.keys(groups).length === 0) {
-    list.innerHTML = "<li>No expenses this month</li>";
+    list.innerHTML = `<li class="empty-state"><strong>No bites logged this month.</strong><span>Your panda is confused.</span></li>`;
     return;
   }
 
@@ -81,8 +84,8 @@ export function renderGroupedByDay(expenses, list, categoryMap) {
         </div>
         <div>
           $${(e.amount / 100).toFixed(2)}
-          <button id="deleteBtn" class="material-symbols-outlined small-button" data-id="${e.id}">delete</button>
-          <button id="editBtn" class="material-symbols-outlined small-button" data-id="${e.id}">edit</button>
+          <button id="deleteBtn" class="small-button" data-id="${e.id}" aria-label="Delete expense">×</button>
+          <button id="editBtn" class="material-symbols-outlined small-button" data-id="${e.id}" aria-label="Edit expense">edit</button>
         </div>
       `;
 
@@ -115,6 +118,13 @@ let categoryChartInstance;
 function renderCategoryPie(expenses) {
   const ctx = document.getElementById("category-chart");
   if (!ctx) return;
+  if (typeof Chart === "undefined") {
+    ctx.replaceWith(Object.assign(document.createElement("p"), {
+      className: "setting-note",
+      textContent: "Charts need a connection the first time they are opened."
+    }));
+    return;
+  }
 
   if (categoryChartInstance) {
     categoryChartInstance.destroy();
