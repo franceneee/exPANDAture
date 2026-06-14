@@ -1,17 +1,87 @@
 import { getMonthRange, getYearRange, getExpensesByDateRange } from "../features/expenses.js";
 import { filterByCategory } from "../features/categories.js";
-import { state, getActiveMonthKey } from "../features/state.js";
 import { formatLocalDate } from "../features/utils.js";
-import { getCategoryMap } from "../app.js";
 
 function countByDate(expenses) {
     const map = {};
 
     for (const e of expenses) {
-        map[e.date] = e.amount;
+        if (!map[e.date]) {
+            map[e.date] = { count: 0, total: 0 };
+        }
+        map[e.date].count += 1;
+        map[e.date].total += Number(e.amount);
     }
 
     return map;
+}
+
+function formatHeatmapDate(date) {
+    return new Date(`${date}T00:00:00`).toLocaleDateString("en-SG", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function showHeatmapTooltip(containerId, date, day, cell, lockSelection = false) {
+    const tooltip = document.getElementById(`${containerId}-tooltip`);
+    if (!tooltip) return;
+
+    const container = document.getElementById(containerId);
+    if (lockSelection) {
+        container.dataset.selectedDate = date;
+    }
+
+    document.querySelectorAll(`#${containerId} .heat-cell.previewing`)
+        .forEach(selected => selected.classList.remove("previewing"));
+    cell.classList.add("previewing");
+
+    if (lockSelection) {
+        document.querySelectorAll(`#${containerId} .heat-cell.selected`)
+            .forEach(selected => selected.classList.remove("selected"));
+        cell.classList.add("selected");
+    }
+
+    tooltip.innerHTML = `
+        <span>${formatHeatmapDate(date)}</span>
+        <strong>$${(day.total / 100).toFixed(2)} spent</strong>
+    `;
+}
+
+function createHeatmapCell({ containerId, date, day, month }) {
+    const cell = document.createElement("button");
+    cell.type = "button";
+    cell.className = "heat-cell";
+    cell.dataset.count = Math.min(day.count, 4);
+    cell.setAttribute("aria-label", `${formatHeatmapDate(date)}: $${(day.total / 100).toFixed(2)} spent`);
+
+    if (new Date(`${date}T00:00:00`).getMonth() !== month) {
+        cell.classList.add("out-month");
+    }
+
+    cell.dataset.date = date;
+    cell.dataset.total = day.total;
+    cell.addEventListener("click", () => showHeatmapTooltip(containerId, date, day, cell, true));
+    cell.addEventListener("mouseenter", () => showHeatmapTooltip(containerId, date, day, cell));
+    cell.addEventListener("focus", () => showHeatmapTooltip(containerId, date, day, cell, true));
+    return cell;
+}
+
+function restoreLockedHeatmapSelection(containerId) {
+    const container = document.getElementById(containerId);
+    const selectedDate = container?.dataset.selectedDate;
+    if (!selectedDate) return;
+
+    const cell = [...container.querySelectorAll(".heat-cell")]
+        .find(candidate => candidate.dataset.date === selectedDate);
+    if (!cell) return;
+
+    showHeatmapTooltip(containerId, selectedDate, {
+        count: Number(cell.dataset.count),
+        total: Number(cell.dataset.total)
+    }, cell);
 }
 
 export function generateCalendarGrid(year, month) {
@@ -50,9 +120,8 @@ function calculateHabitSum(countMap, year, month) {
             .toISOString()
             .slice(0, 10);
 
-        if (countMap[date] > 0) {
-            sum += countMap[date];
-            console.log(date, countMap[date]);
+        if (countMap[date]?.total > 0) {
+            sum += countMap[date].total;
         }
     }
 
@@ -70,8 +139,8 @@ function calculateYearSum(countMap, year) {
             .toISOString()
             .slice(0, 10);
 
-        if (countMap[date] > 0)
-            sum += countMap[date];
+        if (countMap[date]?.total > 0)
+            sum += countMap[date].total;
     }
 
     return (sum / 100).toFixed(2);
@@ -80,44 +149,31 @@ function calculateYearSum(countMap, year) {
 export function renderHeatmap({ containerId, countMap, year, month }) {
     const container = document.getElementById(containerId);
     container.innerHTML = "";
+    delete container.dataset.selectedDate;
+    container.onmouseleave = () => restoreLockedHeatmapSelection(containerId);
 
     const grid = generateCalendarGrid(year, month);
 
     grid.forEach(date => {
-        const count = countMap[date] || 0;
+        const day = countMap[date] || { count: 0, total: 0 };
 
-        const cell = document.createElement("div");
-        cell.className = "heat-cell";
-        cell.dataset.count = Math.min(count, 4); // cap at 4
-
-        // fade out days not in current month
-        const d = new Date(date);
-        if (d.getMonth() !== month) {
-            cell.classList.add("out-month");
-        }
-
-        cell.title = `${date}: ${count} entries`;
-
-        container.appendChild(cell);
-
-        categoryMap = getCategoryMap();
-        console.log(categoryMap);
+        container.appendChild(createHeatmapCell({ containerId, date, day, month }));
     });
 }
 
 export async function renderCategoryHeatmap({
     containerId,
     categoryId,
-    mode = "month" // "month" | "year"
+    mode = "month", // "month" | "year"
+    date = new Date()
 }) {
-    const date = state.activeDate;
     const range = mode === "year"
         ? getYearRange(date)
         : getMonthRange(date);
 
     const expenses = await getExpensesByDateRange(range.start, range.end);
 
-    const filtered = filterByCategory(expenses, categoryId);
+    const filtered = categoryId ? filterByCategory(expenses, categoryId) : expenses;
     const countMap = countByDate(filtered);
 
     let year = date.getFullYear();
@@ -162,20 +218,16 @@ function renderHeatmapGrid({ containerId, gridDates, countMap, month }) {
         return;
     }
     container.innerHTML = "";
+    delete container.dataset.selectedDate;
+    container.onmouseleave = () => restoreLockedHeatmapSelection(containerId);
+    const tooltip = document.getElementById(`${containerId}-tooltip`);
+    if (tooltip) {
+        tooltip.innerHTML = "<span>Select a day</span><strong>Tap a square to see spending</strong>";
+    }
 
     gridDates.forEach((date) => {
-        const count = countMap[date] || 0;
+        const day = countMap[date] || { count: 0, total: 0 };
 
-        const cell = document.createElement("div");
-        cell.className = "heat-cell";
-        cell.dataset.count = Math.min(count, 4);
-
-        // grey out days not in current month
-        const d = new Date(date);
-        if (d.getMonth() !== month) {
-            cell.classList.add("out-month");
-        }
-
-        container.appendChild(cell);
+        container.appendChild(createHeatmapCell({ containerId, date, day, month }));
     });
 }

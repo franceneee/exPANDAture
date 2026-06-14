@@ -11,6 +11,7 @@
     --card: #fffdf6;
     --line: #dce2d5;
     --danger: #bd5d57;
+    --hover-ring: #c58c3f;
     --shadow: 0 18px 45px rgba(39, 67, 50, .12)
 }
 
@@ -501,20 +502,38 @@ select:focus {
     margin-top: 12px
 }
 
+.chart-wrap {
+    width: 100%;
+    max-width: 520px;
+    margin-right: auto;
+    margin-left: auto
+}
+
+#category-chart {
+    width: 100% !important;
+    height: 320px !important;
+    max-height: 45vh
+}
+
 #heatmap {
     display: grid;
     grid-template-columns: repeat(7, 14px);
     grid-auto-rows: 14px;
-    gap: 5px;
+    gap: 8px;
     overflow: auto;
-    padding: 14px 0
+    padding: 16px 5px;
+    margin: 0 -5px
 }
 
 .heat-cell {
+    display: block;
     width: 14px;
     height: 14px;
+    padding: 0;
+    border: 0;
     border-radius: 4px;
-    background: #dfe5dc
+    background: #dfe5dc;
+    cursor: pointer
 }
 
 .heat-cell[data-count="1"] {
@@ -535,6 +554,67 @@ select:focus {
 
 .out-month {
     opacity: .18
+}
+
+.heat-cell.selected {
+    outline: 2px solid var(--jade-dark);
+    outline-offset: 2px
+}
+
+.heat-cell.previewing:not(.selected) {
+    outline: 2px solid var(--hover-ring);
+    outline-offset: 2px
+}
+
+.heat-cell.selected.previewing {
+    outline-color: var(--jade-dark)
+}
+
+.heat-cell:focus-visible:not(.selected) {
+    outline: 2px dashed var(--hover-ring);
+    outline-offset: 2px
+}
+
+.heatmap-tooltip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 42px;
+    margin-top: 3px;
+    padding: 10px 12px;
+    border-radius: 13px;
+    color: var(--muted);
+    background: var(--card);
+    font-size: .72rem
+}
+
+.heatmap-tooltip strong {
+    color: var(--jade-dark);
+    text-align: right
+}
+
+.analytics-filters {
+    display: grid;
+    grid-template-columns: minmax(180px, 260px);
+    gap: 8px;
+    margin-bottom: 12px
+}
+
+.analytics-filters label {
+    display: grid;
+    gap: 5px
+}
+
+.analytics-filters input,
+.analytics-filters select {
+    margin: 0
+}
+
+.heatmap-category-filter {
+    display: grid;
+    gap: 5px;
+    margin-bottom: 10px
 }
 
 .segmented {
@@ -901,6 +981,7 @@ select:focus {
     --card: #fff8e9;
     --line: #e2cdb2;
     --danger: #9a3d43;
+    --hover-ring: #47634a;
     --shadow: 0 18px 45px rgba(95, 55, 34, .14)
 }
 
@@ -1026,6 +1107,10 @@ select:focus {
     }
 
     .theme-picker {
+        grid-template-columns: 1fr
+    }
+
+    .analytics-filters {
         grid-template-columns: 1fr
     }
 }

@@ -132,10 +132,13 @@
                             <p class="eyebrow">ACTIVITY</p>
                             <h3>Bamboo calendar</h3>
                         </div><strong id="heatmap-sum">$0.00</strong>
-                    </div><select id="heatmap-category" name="heatmap-category" data-category-dropdown></select>
+                    </div><label class="heatmap-category-filter">Category<select id="heatmap-category" name="heatmap-category" data-category-dropdown></select></label>
                     <div class="segmented"><button onclick="setMode('month')">Month</button><button
                             onclick="setMode('year')">Year</button></div>
                     <div id="heatmap"></div>
+                    <div id="heatmap-tooltip" class="heatmap-tooltip" role="status">
+                        <span>Select a day</span><strong>Tap a square to see spending</strong>
+                    </div>
                 </div>
             </div>
         </section>
