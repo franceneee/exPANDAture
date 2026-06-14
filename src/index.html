@@ -141,15 +141,24 @@
             </div>
             <div id="analytics-tab" class="tab-content" style="display:none;">
                 <div class="analytics-filters"><label>Month<input id="heatmap-month" type="month" /></label></div>
-                <div class="chart-wrap"><div class="section-heading compact"><div><p class="eyebrow">BREAKDOWN</p><h3>Spending by category</h3></div></div><canvas id="category-chart"></canvas></div>
+                <div class="chart-wrap">
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">BREAKDOWN</p>
+                            <h3>Spending by category</h3>
+                        </div>
+                    </div><canvas id="category-chart"></canvas>
+                </div>
                 <div class="heatmap-card">
                     <div class="section-heading compact">
                         <div>
                             <p class="eyebrow">ACTIVITY</p>
                             <h3>Bamboo calendar</h3>
                         </div><strong id="heatmap-sum">$0.00</strong>
-                    </div><label class="heatmap-category-filter">Category<select id="heatmap-category" name="heatmap-category" data-category-dropdown></select></label>
-                    <div class="segmented"><button onclick="setMode('month')">Month</button><button
+                    </div><label class="heatmap-category-filter">Category<select id="heatmap-category"
+                            name="heatmap-category" data-category-dropdown></select></label>
+                    <div class="segmented"><button data-heatmap-mode="month"
+                            onclick="setMode('month')">Month</button><button data-heatmap-mode="year"
                             onclick="setMode('year')">Year</button></div>
                     <div id="heatmap"></div>
                     <div id="heatmap-tooltip" class="heatmap-tooltip" role="status">

@@ -718,6 +718,12 @@ select:focus {
     color: var(--jade)
 }
 
+.segmented button.active {
+    color: var(--card);
+    background: var(--jade);
+    box-shadow: 0 5px 12px rgba(47, 96, 71, .18)
+}
+
 .settings-block+.settings-block {
     margin-top: 16px
 }

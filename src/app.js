@@ -59,6 +59,11 @@ async function renderFilteredAnalytics() {
 
 window.setMode = (mode) => {
   heatmapMode = mode;
+  document.querySelectorAll("[data-heatmap-mode]").forEach(button => {
+    const isActive = button.dataset.heatmapMode === mode;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
   renderSelectedHeatmap();
 };
 
@@ -75,8 +80,8 @@ async function initApp() {
   const today = new Date();
   heatmapMonth.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   heatmapMonth.addEventListener("change", renderFilteredAnalytics);
+  window.setMode(heatmapMode);
 
-  await renderSelectedHeatmap();
   await populateCurrencySelect();
   setupExpenseForm();
   setupCategoryManager();

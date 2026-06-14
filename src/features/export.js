@@ -29,17 +29,17 @@ export async function exportCSV(startMonth, endMonth = startMonth) {
     const expenses = await getExpensesByDateRange(range.start, range.end);
     const categoryMap = getCategoryMap();
     expenses
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .forEach(e => {
-        rows.push([
-            e.date,
-            e.description,
-            (e.amount / 100).toFixed(2),
-            e.currency,
-            categoryMap[e.categoryId] || "Uncategorised",
-            e.mealType || ""
-        ]);
-      });
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .forEach(e => {
+            rows.push([
+                e.date,
+                e.description,
+                (e.amount / 100).toFixed(2),
+                e.currency,
+                categoryMap[e.categoryId] || "Uncategorised",
+                e.mealType || ""
+            ]);
+        });
 
     const csv = rows.map(row => row.map(escapeCSVField).join(",")).join("\r\n");
     const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
