@@ -24,16 +24,42 @@ export function getCategoryMap() {
 
 function getHeatmapCategoryId() {
   const categorySelect = document.getElementById("heatmap-category");
-  return categorySelect ? Number(categorySelect.value) : 1;
+  return categorySelect?.value || null;
+}
+
+function getHeatmapDate() {
+  const value = document.getElementById("heatmap-month")?.value;
+  if (!value) return new Date();
+  const [year, month] = value.split("-").map(Number);
+  return new Date(year, month - 1, 1);
+}
+
+function renderSelectedHeatmap() {
+  return renderCategoryHeatmap({
+    containerId: "heatmap",
+    categoryId: getHeatmapCategoryId(),
+    mode: heatmapMode,
+    date: getHeatmapDate()
+  });
+}
+
+function getAnalyticsMonthKey() {
+  const date = getHeatmapDate();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+async function renderFilteredAnalytics() {
+  await Promise.all([
+    renderAnalytics({
+      monthKey: getAnalyticsMonthKey()
+    }),
+    renderSelectedHeatmap()
+  ]);
 }
 
 window.setMode = (mode) => {
   heatmapMode = mode;
-  renderCategoryHeatmap({
-    containerId: "heatmap",
-    categoryId: getHeatmapCategoryId(),
-    mode
-  });
+  renderSelectedHeatmap();
 };
 
 async function initApp() {
@@ -44,13 +70,11 @@ async function initApp() {
   categoryMap = await populateCategorySelect();
 
   const heatmapCategorySelect = document.getElementById("heatmap-category");
-  heatmapCategorySelect?.addEventListener("change", () => {
-    renderCategoryHeatmap({
-      containerId: "heatmap",
-      categoryId: getHeatmapCategoryId(),
-      mode: heatmapMode
-    });
-  });
+  heatmapCategorySelect?.addEventListener("change", renderSelectedHeatmap);
+  const heatmapMonth = document.getElementById("heatmap-month");
+  const today = new Date();
+  heatmapMonth.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+  heatmapMonth.addEventListener("change", renderFilteredAnalytics);
 
   await renderHome();
   await populateCurrencySelect();
@@ -89,18 +113,12 @@ document.querySelectorAll(".tab").forEach(btn => {
     document.getElementById("analytics-tab").style.display =
       tab === "analytics" ? "block" : "none";
 
-    if (tab === "analytics") renderAnalytics();
+    if (tab === "analytics") renderFilteredAnalytics();
   };
 });
 
 async function renderHome() {
-  const categoryId = getHeatmapCategoryId();
-  console.log("Rendering home with categoryId", categoryId);
-  await renderCategoryHeatmap({
-    containerId: "heatmap",
-    categoryId,
-    mode: heatmapMode
-  });
+  await renderSelectedHeatmap();
 }
 
 export function renderApp() {

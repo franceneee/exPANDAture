@@ -143,12 +143,15 @@ function renderCategoryPie(expenses) {
       datasets: [{
         data
       }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
     }
   });
 }
 
-export async function renderAnalytics() {
-  const expenses = await getExpensesByMonthKey(getActiveMonthKey());
-
+export async function renderAnalytics({ monthKey = getActiveMonthKey() } = {}) {
+  const expenses = await getExpensesByMonthKey(monthKey);
   renderCategoryPie(expenses);
 }
