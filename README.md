@@ -1,25 +1,29 @@
 # exPANDAture
-A local-first, panda-powered expenditure tracker (created for fun).
 
-## Privacy model
+A local-first, panda-powered expenditure tracker created for fun.
+
+## Privacy Model
 
 - Expenses and categories stay in the browser's IndexedDB and are not sent to a server.
 - An optional local PIN gate can be enabled in **Grove > Privacy lock**.
 - The PIN verifier is salted and stretched with PBKDF2; the raw PIN is never stored.
-- The PIN gate protects against casual access, but it does **not** encrypt IndexedDB against someone with device or browser-profile access. Use your phone's screen lock as the primary security boundary.
+- The PIN gate protects against casual access, but does not encrypt IndexedDB against someone with device or browser-profile access.
 - Exported CSV files are unencrypted, so store or share them carefully.
 
 ## PWA
 
-Serve the `src` directory over HTTPS (or localhost), then use your browser's **Add to Home Screen** action. The service worker caches the app shell for offline use.
+Serve the `src` directory over HTTPS or localhost, then use the browser's **Add to Home Screen** action. The service worker caches the app shell for offline use.
 
 ## Folder Structure
 ```
 exPANDAture/
 │
-├─ index.html
-├─ styles.css
 ├─ app.js
+├─ index.html
+├─ manifest.webmanifest
+├─ service-worker.js
+├─ styles.css
+├─ web-icon.png
 │
 ├─ db/
 │   ├─ db.js
@@ -29,13 +33,13 @@ exPANDAture/
 │   ├─ categories.js
 │   ├─ expenses.js
 │   ├─ export.js
+│   ├─ privacy-lock.js
 |   ├─ state.js
+│   ├─ theme.js
 │   └─ utils.js
 │
 ├─ models/
-│   ├─ category.js
-│   ├─ constants.js
-│   └─ expense.js
+│   └─ constants.js
 |
 └─ ui/
     ├─ category-manager.js
@@ -43,7 +47,6 @@ exPANDAture/
     ├─ currency-select.js
     ├─ expense-form.js
     ├─ expense-list.js
-    ├─ list.js
     ├─ meal-type-ui.js
     ├─ month-switcher.js
     ├─ summary.js
