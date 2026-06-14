@@ -14,6 +14,7 @@ import { renderMonthlySummary } from "./ui/summary.js";
 import { renderCategoryHeatmap } from "./ui/tracker.js";
 import { setupPrivacyLock } from "./features/privacy-lock.js";
 import { setupThemeToggle } from "./features/theme.js";
+import { showToast } from "./ui/toast.js";
 
 let categoryMap = {};
 let heatmapMode = "month";
@@ -128,9 +129,11 @@ exportPanel.onsubmit = async event => {
       currentMonthOnly ? currentMonth : exportPanel.querySelector("#export-start-month").value,
       currentMonthOnly ? currentMonth : exportPanel.querySelector("#export-end-month").value
     );
-    message.textContent = "CSV downloaded.";
+    message.textContent = "";
+    showToast("CSV downloaded.");
   } catch (error) {
-    message.textContent = error.message;
+    message.textContent = "";
+    showToast(error.message || "Could not export CSV.", "error");
   }
 };
 

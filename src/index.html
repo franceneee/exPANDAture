@@ -84,7 +84,9 @@
                 <div class="field-row"><label for="date">When?</label><input id="date" type="date" name="date" /></div>
                 <div class="field-row"><label for="amount">How much?</label>
                     <div class="amount-row"><select id="currency" name="currency" aria-label="Currency"></select><input
-                            id="amount" type="number" name="amount" step="0.01" placeholder="0.00" /></div>
+                            id="amount" type="number" name="amount" step="0.01" placeholder="0.00"
+                            aria-describedby="amount-error" /></div>
+                    <p id="amount-error" class="field-error" role="alert" hidden></p>
                 </div>
                 <div class="field-row"><label for="category">Which basket?</label><select id="category" name="category"
                         data-category-dropdown></select>
@@ -147,7 +149,12 @@
                             <p class="eyebrow">BREAKDOWN</p>
                             <h3>Spending by category</h3>
                         </div>
-                    </div><canvas id="category-chart"></canvas>
+                    </div>
+                    <div id="category-chart-empty" class="chart-empty-state" hidden>
+                        <strong>No spending to chart</strong>
+                        <span>Log an expense or choose another month.</span>
+                    </div>
+                    <canvas id="category-chart"></canvas>
                 </div>
                 <div class="heatmap-card">
                     <div class="section-heading compact">
@@ -209,6 +216,9 @@
     <div id="undo-toast" class="undo-toast" role="status" aria-live="polite" hidden>
         <span id="undo-toast-message">Expense deleted.</span>
         <button id="undo-toast-button" type="button">Undo</button>
+    </div>
+    <div id="app-toast" class="app-toast success" role="status" aria-live="polite" hidden>
+        <span id="app-toast-message"></span>
     </div>
     <script type="module" src="app.js"></script>
 </body>

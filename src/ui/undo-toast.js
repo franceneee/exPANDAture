@@ -1,3 +1,5 @@
+import { showToast } from "./toast.js";
+
 const UNDO_TIMEOUT_MS = 6000;
 let dismissTimer;
 
@@ -15,6 +17,9 @@ export function showUndoToast(message, onUndo) {
         try {
             await onUndo();
             hideUndoToast();
+        } catch (error) {
+            hideUndoToast();
+            showToast(error.message || "Could not restore expense.", "error");
         } finally {
             undoButton.disabled = false;
         }

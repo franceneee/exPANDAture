@@ -5,6 +5,7 @@ import { formatSmartDate, getDayEmoji } from "../features/utils.js";
 import { openEditForm } from "./expense-form.js";
 import { renderMonthlySummary } from "./summary.js";
 import { showUndoToast } from "./undo-toast.js";
+import { showToast } from "./toast.js";
 
 function groupExpensesByDay(expenses) {
   const groups = {};
@@ -79,6 +80,7 @@ function renderGroupedByDay(expenses, list, categoryMap) {
         const mealLabel = e.mealType ? `[${e.mealType}] ` : "";
         const li = document.createElement("li");
         li.className = "expense-item";
+        li.tabIndex = 0;
         li.setAttribute("role", "button");
         li.setAttribute("aria-label", `Edit ${e.description || categoryMap[e.categoryId] || "expense"}`);
 
@@ -117,6 +119,7 @@ function renderGroupedByDay(expenses, list, categoryMap) {
           showUndoToast("Expense deleted.", async () => {
             await addExpense(e);
             await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
+            showToast("Expense restored.");
           });
         };
 

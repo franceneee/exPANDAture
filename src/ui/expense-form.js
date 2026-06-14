@@ -4,6 +4,7 @@ import { renderMonthlySummary } from "./summary.js";
 import { renderMonthlyExpenses } from "./expense-list.js";
 import { setupMealTypeUI, hideMealTypeUI } from "./meal-type-ui.js";
 import { getCategoryMap, renderApp } from "../app.js";
+import { showToast } from "./toast.js";
 
 function getMonthKey(dateStr) {
     const d = new Date(dateStr);
@@ -13,18 +14,21 @@ function getMonthKey(dateStr) {
 export function setupExpenseForm() {
     const f = document.getElementById("expense-form");
     const dateInput = f.querySelector("input[name='date']");
+    const amountInput = f.querySelector("input[name='amount']");
     setToday(dateInput);
     document.getElementById("resetBtn").onclick = () => { resetFormMode(); };
     document.getElementById("closeBtn").onclick = () => { state.view = "home"; renderApp(); };
+    amountInput.addEventListener("input", () => clearAmountError(amountInput));
 
     f.onsubmit = async e => {
         e.preventDefault();
         const rawAmount = Number(f.amount.value);
 
         if (!Number.isFinite(rawAmount) || rawAmount <= 0) {
-            alert("Please enter a valid amount");
+            showAmountError(amountInput, "Enter an amount greater than zero.");
             return;
         }
+        clearAmountError(amountInput);
 
         const base = {
             description: f.description.value,
@@ -36,39 +40,45 @@ export function setupExpenseForm() {
             updatedAt: new Date().toISOString(),
         };
 
-        if (state.editingExpense) {
-            setupMealTypeUI();
-            await updateExpense({
-                ...state.editingExpense,
-                ...base
-            });
+        try {
+            if (state.editingExpense) {
+                setupMealTypeUI();
+                await updateExpense({
+                    ...state.editingExpense,
+                    ...base
+                });
 
-            state.editingExpense = null;
-            state.view = "history";
+                state.editingExpense = null;
+                state.view = "history";
 
-            resetFormMode();
-            renderApp();
-            await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
-        } else {
-            await addExpense({
-                id: crypto.randomUUID(),
-                date: f.date.value,
-                description: f.description.value,
-                amount: Math.round(parseFloat(f.amount.value) * 100),
-                currency: f.currency.value,
-                monthKey: getMonthKey(f.date.value),
-                categoryId: f.category.value || null,
-                mealType: f["meal-type-select"].value || null,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            });
+                resetFormMode();
+                renderApp();
+                await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
+                showToast("Expense updated.");
+            } else {
+                await addExpense({
+                    id: crypto.randomUUID(),
+                    date: f.date.value,
+                    description: f.description.value,
+                    amount: Math.round(rawAmount * 100),
+                    currency: f.currency.value,
+                    monthKey: getMonthKey(f.date.value),
+                    categoryId: f.category.value || null,
+                    mealType: f["meal-type-select"].value || null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                });
 
-            renderApp();
-            await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
-            f.reset();
-            setToday(dateInput);
-            hideMealTypeUI();
-        };
+                renderApp();
+                await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
+                f.reset();
+                setToday(dateInput);
+                hideMealTypeUI();
+                showToast("Expense saved.");
+            }
+        } catch (error) {
+            showToast(error.message || "Could not save expense.", "error");
+        }
     }
 }
 
@@ -76,6 +86,7 @@ export function openEditForm(expense) {
     state.editingExpense = expense;
 
     const form = document.getElementById("expense-form");
+    clearAmountError(form.amount);
     form.description.value = expense.description;
     form.amount.value = expense.amount / 100;
     form.date.value = expense.date;
@@ -106,6 +117,7 @@ function resetFormMode() {
 
     const form = document.getElementById("expense-form");
     form.reset();
+    clearAmountError(form.amount);
     const mealWrapper = form.querySelector("#meal-type-wrapper");
     mealWrapper.style.display = "none";
 
@@ -118,4 +130,19 @@ function resetFormMode() {
 function setToday(input) {
     const today = new Date();
     input.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+}
+
+function showAmountError(input, message) {
+    const error = document.getElementById("amount-error");
+    error.textContent = message;
+    error.hidden = false;
+    input.setAttribute("aria-invalid", "true");
+    input.focus();
+}
+
+function clearAmountError(input) {
+    const error = document.getElementById("amount-error");
+    error.textContent = "";
+    error.hidden = true;
+    input.removeAttribute("aria-invalid");
 }
