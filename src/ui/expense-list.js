@@ -1,8 +1,10 @@
 import { getCategoryMap, renderApp } from "../app.js";
-import { getExpensesByMonthKey, getExpenseById, deleteExpense, groupByCategory } from "../features/expenses.js";
+import { addExpense, getExpensesByMonthKey, getExpenseById, deleteExpense, groupByCategory } from "../features/expenses.js";
 import { getActiveMonthKey, state } from "../features/state.js";
 import { formatSmartDate, getDayEmoji } from "../features/utils.js";
 import { openEditForm } from "./expense-form.js";
+import { renderMonthlySummary } from "./summary.js";
+import { showUndoToast } from "./undo-toast.js";
 
 function groupExpensesByDay(expenses) {
   const groups = {};
@@ -92,7 +94,11 @@ function renderGroupedByDay(expenses, list, categoryMap) {
 
         li.querySelector("#deleteBtn").onclick = async () => {
           await deleteExpense(e.id);
-          await renderMonthlyExpenses();
+          await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
+          showUndoToast("Expense deleted.", async () => {
+            await addExpense(e);
+            await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
+          });
         };
 
         li.querySelector("#editBtn").onclick = async () => {
