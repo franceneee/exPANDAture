@@ -367,6 +367,94 @@ select:focus {
     margin-bottom: 15px
 }
 
+.export-panel {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px;
+    margin: -5px 0 12px;
+    padding: 10px 14px;
+    border-radius: 16px;
+    background: var(--leaf-soft)
+}
+
+.export-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0
+}
+
+.export-options legend {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--jade-dark);
+    font-size: .78rem;
+    font-weight: 700;
+    text-align: left
+}
+
+.export-panel .export-options label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+    text-align: left;
+    white-space: nowrap;
+    font-size: .68rem;
+    font-weight: 600
+}
+
+.export-options input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    accent-color: var(--jade)
+}
+
+.export-range-fields {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px
+}
+
+.export-range-fields[hidden] {
+    display: none
+}
+
+.export-range-fields label {
+    display: grid;
+    gap: 5px
+}
+
+.export-panel[hidden] {
+    display: none
+}
+
+.export-panel > label {
+    display: grid;
+    gap: 5px
+}
+
+.export-panel input {
+    background: var(--card)
+}
+
+.export-panel .form-message {
+    grid-column: 1 / -1;
+    color: var(--jade-dark)
+}
+
+.export-panel .form-message:empty {
+    display: none
+}
+
 #monthSwitcher {
     display: flex;
     align-items: center;
@@ -1080,6 +1168,20 @@ select:focus {
     .card-header {
         align-items: stretch;
         flex-direction: column
+    }
+
+    .export-panel {
+        grid-template-columns: 1fr;
+        justify-items: stretch
+    }
+
+    .export-range-fields {
+        grid-column: auto;
+        grid-template-columns: 1fr
+    }
+
+    .export-panel .form-message {
+        grid-column: auto
     }
 
     #monthSwitcher {

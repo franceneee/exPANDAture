@@ -1,5 +1,5 @@
 import { getCategoryMap } from "../app.js";
-import { getExpensesByMonthKey } from "./expenses.js";
+import { getExpensesByDateRange } from "./expenses.js";
 
 function escapeCSVField(value) {
     const text = String(value ?? "");
@@ -8,13 +8,29 @@ function escapeCSVField(value) {
         : text;
 }
 
-export async function exportCSV(monthKey) {
+function monthRange(startMonth, endMonth) {
+    const [endYear, endIndex] = endMonth.split("-").map(Number);
+    const lastDay = new Date(endYear, endIndex, 0).getDate();
+    return {
+        start: `${startMonth}-01`,
+        end: `${endMonth}-${String(lastDay).padStart(2, "0")}`
+    };
+}
+
+export async function exportCSV(startMonth, endMonth = startMonth) {
+    if (startMonth > endMonth) {
+        throw new Error("Start month must be before or equal to end month.");
+    }
+
     const rows = [
         ["Date", "Description", "Amount", "Currency", "Category", "Meal Type"]
     ];
-    const expenses = await getExpensesByMonthKey(monthKey);
+    const range = monthRange(startMonth, endMonth);
+    const expenses = await getExpensesByDateRange(range.start, range.end);
     const categoryMap = getCategoryMap();
-    expenses.forEach(e => {
+    expenses
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .forEach(e => {
         rows.push([
             e.date,
             e.description,
@@ -23,7 +39,7 @@ export async function exportCSV(monthKey) {
             categoryMap[e.categoryId] || "Uncategorised",
             e.mealType || ""
         ]);
-    });
+      });
 
     const csv = rows.map(row => row.map(escapeCSVField).join(",")).join("\r\n");
     const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
@@ -31,7 +47,8 @@ export async function exportCSV(monthKey) {
     const a = document.createElement("a");
     const url = URL.createObjectURL(blob);
     a.href = url;
-    a.download = `expenses-${monthKey}.csv`;
+    const suffix = startMonth === endMonth ? startMonth : `${startMonth}-to-${endMonth}`;
+    a.download = `expenses-${suffix}.csv`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 0);
 }

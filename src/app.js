@@ -89,8 +89,45 @@ async function initApp() {
 
 initApp().catch(console.error);
 
-document.getElementById("export-btn").onclick = async () =>
-  await exportCSV(getActiveMonthKey());
+const exportPanel = document.getElementById("export-panel");
+const exportRangeFields = document.getElementById("export-range-fields");
+const exportPeriodOptions = exportPanel.querySelectorAll('input[name="export-period"]');
+
+exportPeriodOptions.forEach(option => {
+  option.onchange = () => {
+    exportRangeFields.hidden = option.value !== "range";
+    exportPanel.querySelector("#export-message").textContent = "";
+  };
+});
+
+document.getElementById("export-btn").onclick = () => {
+  exportPanel.hidden = !exportPanel.hidden;
+  if (!exportPanel.hidden) {
+    const monthKey = getActiveMonthKey();
+    exportPanel.querySelector('input[name="export-period"][value="current"]').checked = true;
+    exportRangeFields.hidden = true;
+    exportPanel.querySelector("#export-start-month").value = monthKey;
+    exportPanel.querySelector("#export-end-month").value = monthKey;
+    exportPanel.querySelector("#export-message").textContent = "";
+  }
+};
+
+exportPanel.onsubmit = async event => {
+  event.preventDefault();
+  const message = exportPanel.querySelector("#export-message");
+  try {
+    const currentMonthOnly =
+      exportPanel.querySelector('input[name="export-period"]:checked').value === "current";
+    const currentMonth = getActiveMonthKey();
+    await exportCSV(
+      currentMonthOnly ? currentMonth : exportPanel.querySelector("#export-start-month").value,
+      currentMonthOnly ? currentMonth : exportPanel.querySelector("#export-end-month").value
+    );
+    message.textContent = "CSV downloaded.";
+  } catch (error) {
+    message.textContent = error.message;
+  }
+};
 
 const dateInput = document.querySelector('input[type="date"]');
 

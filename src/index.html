@@ -124,6 +124,19 @@
                     <div id="trail-month-total" class="trail-month-total">$0.00 spent</div><button id="export-btn"
                         class="secondary-button">Export CSV</button>
                 </div>
+                <form id="export-panel" class="export-panel" hidden>
+                    <fieldset class="export-options">
+                        <legend>Export period</legend>
+                        <label><input type="radio" name="export-period" value="current" checked /> Current month</label>
+                        <label><input type="radio" name="export-period" value="range" /> Selected month range</label>
+                    </fieldset>
+                    <div id="export-range-fields" class="export-range-fields" hidden>
+                        <label>From<input id="export-start-month" type="month" /></label>
+                        <label>To<input id="export-end-month" type="month" /></label>
+                    </div>
+                    <button type="submit" class="primary-button">Download</button>
+                    <p id="export-message" class="form-message" role="status"></p>
+                </form>
                 <ul id="expense-list"></ul>
             </div>
             <div id="analytics-tab" class="tab-content" style="display:none;">
