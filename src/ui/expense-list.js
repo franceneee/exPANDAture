@@ -142,19 +142,26 @@ let categoryChartInstance;
 
 function renderCategoryPie(expenses) {
   const ctx = document.getElementById("category-chart");
-  if (!ctx) return;
-  if (typeof Chart === "undefined") {
-    ctx.replaceWith(Object.assign(document.createElement("p"), {
-      className: "setting-note",
-      textContent: "Charts need a connection the first time they are opened."
-    }));
-    return;
-  }
+  const emptyState = document.getElementById("category-chart-empty");
+  if (!ctx || !emptyState) return;
 
   if (categoryChartInstance) {
     categoryChartInstance.destroy();
+    categoryChartInstance = null;
   }
 
+  if (expenses.length === 0) {
+    showChartEmptyState(ctx, emptyState, "No spending to chart", "Log an expense or choose another month.");
+    return;
+  }
+
+  if (typeof Chart === "undefined") {
+    showChartEmptyState(ctx, emptyState, "Chart unavailable", "Connect once to load the chart, then try again.");
+    return;
+  }
+
+  ctx.hidden = false;
+  emptyState.hidden = true;
   const categoryMap = getCategoryMap();
   const grouped = groupByCategory(expenses);
 
@@ -174,6 +181,13 @@ function renderCategoryPie(expenses) {
       maintainAspectRatio: false
     }
   });
+}
+
+function showChartEmptyState(canvas, emptyState, title, detail) {
+  canvas.hidden = true;
+  emptyState.hidden = false;
+  emptyState.querySelector("strong").textContent = title;
+  emptyState.querySelector("span").textContent = detail;
 }
 
 export async function renderAnalytics({ monthKey = getActiveMonthKey() } = {}) {
