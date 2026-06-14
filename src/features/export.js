@@ -1,6 +1,13 @@
 import { getCategoryMap } from "../app.js";
 import { getExpensesByMonthKey } from "./expenses.js";
 
+function escapeCSVField(value) {
+    const text = String(value ?? "");
+    return /[",\r\n]/.test(text)
+        ? `"${text.replaceAll('"', '""')}"`
+        : text;
+}
+
 export async function exportCSV(monthKey) {
     const rows = [
         ["Date", "Description", "Amount", "Currency", "Category", "Meal Type"]
@@ -18,11 +25,13 @@ export async function exportCSV(monthKey) {
         ]);
     });
 
-    const csv = rows.map(r => r.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
+    const csv = rows.map(row => row.map(escapeCSVField).join(",")).join("\r\n");
+    const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
 
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "expenses.csv";
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = `expenses-${monthKey}.csv`;
     a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
 }
