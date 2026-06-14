@@ -2,25 +2,17 @@ import { getStore, requestToPromise } from "../db/db.js";
 import { formatLocalDate } from "./utils.js";
 
 export async function addExpense(expense) {
-    const s = await getStore("expenses", "readwrite");
-    s.add(expense);
-}
-
-export async function getAllExpenses() {
-    const s = await getStore("expenses");
-    return new Promise(r => {
-        const q = s.getAll();
-        q.onsuccess = () => r(q.result);
-    });
+    const store = getStore("expenses", "readwrite");
+    return requestToPromise(store.add(expense));
 }
 
 export async function deleteExpense(id) {
-    const s = await getStore("expenses", "readwrite");
-    s.delete(id);
+    const store = getStore("expenses", "readwrite");
+    return requestToPromise(store.delete(id));
 }
 
 export async function getExpensesByMonthKey(monthKey) {
-    const store = await getStore("expenses", "readonly");
+    const store = getStore("expenses");
     const index = store.index("monthKey");
 
     const request = index.getAll(monthKey);
@@ -28,13 +20,13 @@ export async function getExpensesByMonthKey(monthKey) {
 }
 
 export async function getExpenseById(id) {
-    const store = await getStore("expenses", "readonly");
+    const store = getStore("expenses");
     const request = store.get(id);
     return requestToPromise(request);
 }
 
 export async function updateExpense(expense) {
-    const store = await getStore("expenses", "readwrite");
+    const store = getStore("expenses", "readwrite");
 
     expense.updatedAt = new Date().toISOString();
 
@@ -43,7 +35,7 @@ export async function updateExpense(expense) {
 }
 
 export async function getExpensesByDateRange(start, end) {
-    const store = await getStore("expenses", "readonly");
+    const store = getStore("expenses");
     const all = await requestToPromise(store.getAll());
 
     return all.filter(e => e.date >= start && e.date <= end);

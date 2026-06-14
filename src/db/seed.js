@@ -1,4 +1,4 @@
-import { getStore } from "./db.js";
+import { getStore, requestToPromise } from "./db.js";
 
 const DEFAULT_CATEGORIES = [
     "bubble tea", "food", "gacha", "games",
@@ -7,18 +7,11 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export async function seedCategoriesIfEmpty() {
-    const store = getStore("categories");
-    const countRequest = store.count();
+    const count = await requestToPromise(getStore("categories").count());
+    if (count > 0) return;
 
-    return new Promise((resolve) => {
-        countRequest.onsuccess = () => {
-            if (countRequest.result === 0) {
-                const writeStore = getStore("categories", "readwrite");
-                DEFAULT_CATEGORIES.forEach(name => {
-                    writeStore.add({ name });
-                });
-            }
-            resolve();
-        };
-    });
+    const store = getStore("categories", "readwrite");
+    await Promise.all(
+        DEFAULT_CATEGORIES.map(name => requestToPromise(store.add({ name })))
+    );
 }

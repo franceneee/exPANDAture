@@ -1,27 +1,22 @@
-import { getStore } from "../db/db.js";
+import { getStore, requestToPromise } from "../db/db.js";
 
 export async function getCategories() {
     const store = getStore("categories");
-    const request = store.getAll();
-
-    return new Promise((resolve, reject) => {
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
+    return requestToPromise(store.getAll());
 }
 
 export async function addCategory(name) {
-    const s = await getStore("categories", "readwrite");
-    s.add({
+    const store = getStore("categories", "readwrite");
+    return requestToPromise(store.add({
         id: crypto.randomUUID(),
         name,
         createdAt: new Date().toISOString()
-    });
+    }));
 }
 
 export async function deleteCategory(id) {
-    const s = await getStore("categories", "readwrite");
-    s.delete(id);
+    const store = getStore("categories", "readwrite");
+    return requestToPromise(store.delete(id));
 }
 
 export function filterByCategory(expenses, categoryId) {
