@@ -79,6 +79,8 @@ function renderGroupedByDay(expenses, list, categoryMap) {
         const mealLabel = e.mealType ? `[${e.mealType}] ` : "";
         const li = document.createElement("li");
         li.className = "expense-item";
+        li.setAttribute("role", "button");
+        li.setAttribute("aria-label", `Edit ${e.description || categoryMap[e.categoryId] || "expense"}`);
 
         li.innerHTML = `
         <div class="expense-main" data-id="${e.id}">
@@ -92,7 +94,24 @@ function renderGroupedByDay(expenses, list, categoryMap) {
         </div>
       `;
 
-        li.querySelector("#deleteBtn").onclick = async () => {
+        const openExpenseForEditing = async () => {
+          const expense = await getExpenseById(e.id);
+          state.view = "expenseForm";
+          renderApp();
+          openEditForm(expense);
+        };
+
+        li.onclick = openExpenseForEditing;
+        li.onkeydown = event => {
+          if (event.target !== li) return;
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openExpenseForEditing();
+          }
+        };
+
+        li.querySelector("#deleteBtn").onclick = async event => {
+          event.stopPropagation();
           await deleteExpense(e.id);
           await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
           showUndoToast("Expense deleted.", async () => {
@@ -101,13 +120,9 @@ function renderGroupedByDay(expenses, list, categoryMap) {
           });
         };
 
-        li.querySelector("#editBtn").onclick = async () => {
-          const expense = await getExpenseById(e.id);
-          state.view = "expenseForm";
-          state.editingExpense = true;
-          renderApp();
-          await openEditForm(expense);
-          renderApp()
+        li.querySelector("#editBtn").onclick = event => {
+          event.stopPropagation();
+          openExpenseForEditing();
         };
 
         breakdown.appendChild(li);
