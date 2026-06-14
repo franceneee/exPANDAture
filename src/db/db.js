@@ -3,17 +3,13 @@ const DB_VERSION = 1;
 let db = null;
 
 export function openDB() {
-    // indexedDB.deleteDatabase("expense_tracker");
-
-    if (db) return Promise.resolve(db); // already open
+    if (db) return Promise.resolve(db);
 
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
 
         request.onupgradeneeded = (event) => {
             const database = event.target.result;
-
-            console.log("Upgrading DB…");
 
             let expenseStore;
             if (!database.objectStoreNames.contains("expenses")) {
@@ -44,7 +40,6 @@ export function openDB() {
 
         request.onsuccess = () => {
             db = request.result;
-            console.log("DB opened. Stores:", [...db.objectStoreNames]);
             resolve(db);
         };
 

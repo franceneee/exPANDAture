@@ -76,7 +76,7 @@ async function initApp() {
   heatmapMonth.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   heatmapMonth.addEventListener("change", renderFilteredAnalytics);
 
-  await renderHome();
+  await renderSelectedHeatmap();
   await populateCurrencySelect();
   setupExpenseForm();
   setupCategoryManager();
@@ -117,18 +117,12 @@ document.querySelectorAll(".tab").forEach(btn => {
   };
 });
 
-async function renderHome() {
-  await renderSelectedHeatmap();
-}
-
 export function renderApp() {
   const home = document.getElementById("home-view");
   const history = document.getElementById("history-view");
   const settings = document.getElementById("settings-view");
   const expenseForm = document.getElementById("expense-form-view");
   const activeNavigation = state.view === "expenseForm" ? "home" : state.view;
-  console.log("Rendering app, current view:", state.view);
-
   document.querySelectorAll(".nav-button").forEach(button => {
     const isActive = button.id === `${activeNavigation}Btn`;
     button.classList.toggle("active", isActive);
@@ -192,7 +186,6 @@ document.querySelector("#addExpenseBtn").onclick = () => {
 };
 
 window.goHome = async () => {
-  console.log("Going home");
   state.view = "home";
   renderApp();
   await renderMonthlySummary();

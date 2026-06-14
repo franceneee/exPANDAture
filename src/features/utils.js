@@ -1,12 +1,5 @@
 import { getCategoryMap } from "../app.js";
 
-export function formatDateWithWeekday(dateStr) {
-    const date = new Date(dateStr);
-    const weekday = date.toLocaleDateString("en-SG", { weekday: "short" });
-    const shortDate = date.toLocaleDateString("en-SG", { day: "numeric", month: "short" });
-    return `${weekday} · ${shortDate}`;
-}
-
 export function formatSmartDate(dateStr) {
     const date = new Date(dateStr);
     const today = new Date();
@@ -46,10 +39,6 @@ export function renderTodayDate() {
         day: "numeric",
         weekday: "short"
     });
-}
-
-export function calculateTotalCount(countMap) {
-    return Object.values(countMap).reduce((a, b) => a + b, 0);
 }
 
 export function formatLocalDate(date) {

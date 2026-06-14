@@ -84,7 +84,7 @@ function restoreLockedHeatmapSelection(containerId) {
     }, cell);
 }
 
-export function generateCalendarGrid(year, month) {
+function generateCalendarGrid(year, month) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
 
@@ -111,54 +111,10 @@ export function generateCalendarGrid(year, month) {
     return grid;
 }
 
-function calculateHabitSum(countMap, year, month) {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    let sum = 0;
-
-    for (let d = 1; d <= daysInMonth; d++) {
-        const date = new Date(year, month, d)
-            .toISOString()
-            .slice(0, 10);
-
-        if (countMap[date]?.total > 0) {
-            sum += countMap[date].total;
-        }
-    }
-
-
-    return (sum / 100).toFixed(2);
-}
-
-function calculateYearSum(countMap, year) {
-    const days = (new Date(year, 11, 31) - new Date(year, 0, 1)) / 86400000 + 1;
-
-    let sum = 0;
-
-    for (let d = 1; d <= days; d++) {
-        const date = new Date(year, 0, d)
-            .toISOString()
-            .slice(0, 10);
-
-        if (countMap[date]?.total > 0)
-            sum += countMap[date].total;
-    }
-
-    return (sum / 100).toFixed(2);
-}
-
-export function renderHeatmap({ containerId, countMap, year, month }) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = "";
-    delete container.dataset.selectedDate;
-    container.onmouseleave = () => restoreLockedHeatmapSelection(containerId);
-
-    const grid = generateCalendarGrid(year, month);
-
-    grid.forEach(date => {
-        const day = countMap[date] || { count: 0, total: 0 };
-
-        container.appendChild(createHeatmapCell({ containerId, date, day, month }));
-    });
+function calculateTotal(countMap) {
+    const cents = Object.values(countMap)
+        .reduce((sum, day) => sum + day.total, 0);
+    return (cents / 100).toFixed(2);
 }
 
 export async function renderCategoryHeatmap({
@@ -188,15 +144,11 @@ export async function renderCategoryHeatmap({
     }
     renderHeatmapGrid({ containerId, gridDates, countMap, month });
 
-    const sum = mode === "month"
-        ? calculateHabitSum(countMap, year, month)
-        : calculateYearSum(countMap, year);
-
     document.getElementById(`${containerId}-sum`)
-        .textContent = `$${sum}`;
+        .textContent = `$${calculateTotal(countMap)}`;
 }
 
-export function generateYearGrid(year) {
+function generateYearGrid(year) {
     const start = new Date(year, 0, 1);
     const end = new Date(year, 11, 31);
 

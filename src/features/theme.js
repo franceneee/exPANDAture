@@ -23,7 +23,7 @@ function currentTheme() {
   return THEMES.includes(saved) ? saved : "panda";
 }
 
-export function applyTheme(theme) {
+function applyTheme(theme) {
   const selected = THEMES.includes(theme) ? theme : "panda";
   const copy = themeCopy[selected];
   document.documentElement.dataset.theme = selected;

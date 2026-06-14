@@ -4,7 +4,7 @@ import { getActiveMonthKey, state } from "../features/state.js";
 import { formatSmartDate, getDayEmoji } from "../features/utils.js";
 import { openEditForm } from "./expense-form.js";
 
-export function groupExpensesByDay(expenses) {
+function groupExpensesByDay(expenses) {
   const groups = {};
 
   expenses.forEach(e => {
@@ -37,16 +37,17 @@ export async function renderMonthlyExpenses() {
     return;
   }
 
-  let categoryMap = getCategoryMap();
+  const categoryMap = getCategoryMap();
 
-  expenses
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .sort((a, b) => b.date.localeCompare(a.date));
+  expenses.sort((a, b) =>
+    b.date.localeCompare(a.date) ||
+    b.createdAt.localeCompare(a.createdAt)
+  );
 
   renderGroupedByDay(expenses, list, categoryMap);
 }
 
-export function renderGroupedByDay(expenses, list, categoryMap) {
+function renderGroupedByDay(expenses, list, categoryMap) {
   const groups = groupExpensesByDay(expenses);
 
   Object.entries(groups)

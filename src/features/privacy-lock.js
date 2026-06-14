@@ -35,7 +35,7 @@ function resetInactivityTimer() {
     if (getStoredPin()) inactivityTimer = setTimeout(lockApp, LOCK_AFTER_MS);
 }
 
-export function lockApp() {
+function lockApp() {
     if (!getStoredPin()) return;
     document.getElementById("lock-screen").hidden = false;
     document.getElementById("unlock-pin").value = "";

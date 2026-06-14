@@ -12,12 +12,6 @@ export async function populateCategorySelect() {
 
     selects.forEach(select => {
         select.innerHTML = "";
-        if (select.hasAttribute("data-all-categories")) {
-            const allOption = document.createElement("option");
-            allOption.value = "";
-            allOption.textContent = "All categories";
-            select.appendChild(allOption);
-        }
         categories.forEach(c => {
             const opt = document.createElement("option");
             opt.value = c.id;

@@ -12,10 +12,8 @@ function getMonthKey(dateStr) {
 
 export function setupExpenseForm() {
     const f = document.getElementById("expense-form");
-    // Set default date
     const dateInput = f.querySelector("input[name='date']");
-    const today = new Date();
-    dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    setToday(dateInput);
     document.getElementById("resetBtn").onclick = () => { resetFormMode(); };
     document.getElementById("closeBtn").onclick = () => { state.view = "home"; renderApp(); };
 
@@ -23,8 +21,7 @@ export function setupExpenseForm() {
         e.preventDefault();
         const rawAmount = Number(f.amount.value);
 
-        // make this prettier next time
-        if (!rawAmount || isNaN(rawAmount)) {
+        if (!Number.isFinite(rawAmount) || rawAmount <= 0) {
             alert("Please enter a valid amount");
             return;
         }
@@ -51,8 +48,7 @@ export function setupExpenseForm() {
 
             resetFormMode();
             renderApp();
-            renderMonthlyExpenses();
-            renderMonthlySummary();
+            await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
         } else {
             await addExpense({
                 id: crypto.randomUUID(),
@@ -65,15 +61,12 @@ export function setupExpenseForm() {
                 mealType: f["meal-type-select"].value || null,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
-            }).then(() => {
-                renderApp();
-                renderMonthlyExpenses();
-            }).then(() => {
-                renderMonthlySummary();
             });
 
+            renderApp();
+            await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
             f.reset();
-            dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+            setToday(dateInput);
             hideMealTypeUI();
         };
     }
@@ -108,7 +101,7 @@ export function openEditForm(expense) {
     document.getElementById("submitBtn").textContent = "save";
 }
 
-export function resetFormMode() {
+function resetFormMode() {
     state.editingExpense = null;
 
     const form = document.getElementById("expense-form");
@@ -117,19 +110,12 @@ export function resetFormMode() {
     mealWrapper.style.display = "none";
 
     const dateInput = form.querySelector("input[name='date']");
-    const today = new Date();
-    dateInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    setToday(dateInput);
     document.getElementById("form-title").textContent = "Add Expense";
     document.getElementById("submitBtn").textContent = "save";
 }
 
-export function cancelForm() {
-    if (state.editingExpense) {
-        state.editingExpense = null;
-        state.view = "month";
-    } else {
-        state.view = "home";
-    }
-
-    renderApp();
+function setToday(input) {
+    const today = new Date();
+    input.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 }
