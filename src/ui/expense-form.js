@@ -6,6 +6,8 @@ import { setupMealTypeUI, hideMealTypeUI } from "./meal-type-ui.js";
 import { getCategoryMap, renderApp } from "../app.js";
 import { showToast } from "./toast.js";
 
+const LAST_EXPENSE_DATE_KEY = "expandature_last_expense_date";
+
 function getMonthKey(dateStr) {
     const d = new Date(dateStr);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
@@ -15,7 +17,7 @@ export function setupExpenseForm() {
     const f = document.getElementById("expense-form");
     const dateInput = f.querySelector("input[name='date']");
     const amountInput = f.querySelector("input[name='amount']");
-    setToday(dateInput);
+    setDefaultDate(dateInput);
     document.getElementById("resetBtn").onclick = () => { resetFormMode(); };
     document.getElementById("closeBtn").onclick = () => { state.view = "home"; renderApp(); };
     amountInput.addEventListener("input", () => clearAmountError(amountInput));
@@ -47,6 +49,7 @@ export function setupExpenseForm() {
                     ...state.editingExpense,
                     ...base
                 });
+                rememberExpenseDate(base.date);
 
                 state.editingExpense = null;
                 state.view = "history";
@@ -68,11 +71,12 @@ export function setupExpenseForm() {
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 });
+                rememberExpenseDate(f.date.value);
 
                 renderApp();
                 await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
                 f.reset();
-                setToday(dateInput);
+                setDefaultDate(dateInput);
                 hideMealTypeUI();
                 showToast("Expense saved.");
             }
@@ -122,14 +126,33 @@ function resetFormMode() {
     mealWrapper.style.display = "none";
 
     const dateInput = form.querySelector("input[name='date']");
-    setToday(dateInput);
+    setDefaultDate(dateInput);
     document.getElementById("form-title").textContent = "Add Expense";
     document.getElementById("submitBtn").textContent = "save";
 }
 
-function setToday(input) {
+function setDefaultDate(input) {
+    input.value = getRememberedExpenseDate() || getTodayDate();
+}
+
+function rememberExpenseDate(date) {
+    if (isDateInputValue(date)) {
+        localStorage.setItem(LAST_EXPENSE_DATE_KEY, date);
+    }
+}
+
+function getRememberedExpenseDate() {
+    const rememberedDate = localStorage.getItem(LAST_EXPENSE_DATE_KEY);
+    return isDateInputValue(rememberedDate) ? rememberedDate : null;
+}
+
+function getTodayDate() {
     const today = new Date();
-    input.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+}
+
+function isDateInputValue(date) {
+    return typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date);
 }
 
 function showAmountError(input, message) {

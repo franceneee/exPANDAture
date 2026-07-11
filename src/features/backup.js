@@ -3,7 +3,7 @@ import { getStore, requestToPromise } from "../db/db.js";
 const BACKUP_FORMAT = "expandature-backup";
 const BACKUP_VERSION = 1;
 const STORE_NAMES = ["expenses", "categories"];
-const LOCAL_STORAGE_KEYS = ["expandature_theme", "expandature_pin"];
+const LOCAL_STORAGE_KEYS = ["expandature_theme", "expandature_pin", "expandature_last_expense_date"];
 
 export async function createBackup() {
     const data = {};
