@@ -4,6 +4,7 @@ import { exportCSV } from "./features/export.js";
 import { initState, getActiveMonthKey, state } from "./features/state.js";
 import { renderTodayDate } from "./features/utils.js";
 import { setupCategoryManager } from "./ui/category-manager.js";
+import { setupBackupRestore } from "./ui/backup-restore.js";
 import { populateCategorySelect } from "./ui/category-select.js";
 import { populateCurrencySelect } from "./ui/currency-select.js";
 import { setupExpenseForm } from "./ui/expense-form.js";
@@ -12,7 +13,7 @@ import { setupMealTypeUI } from "./ui/meal-type-ui.js";
 import { setupMonthSwitcher, resetToCurrentMonth } from "./ui/month-switcher.js";
 import { renderMonthlySummary } from "./ui/summary.js";
 import { renderCategoryHeatmap } from "./ui/tracker.js";
-import { setupPrivacyLock } from "./features/privacy-lock.js";
+import { refreshPrivacyLockControls, setupPrivacyLock } from "./features/privacy-lock.js";
 import { setupThemeToggle } from "./features/theme.js";
 import { showToast } from "./ui/toast.js";
 
@@ -85,7 +86,8 @@ async function initApp() {
 
   await populateCurrencySelect();
   setupExpenseForm();
-  setupCategoryManager();
+  await setupCategoryManager();
+  setupBackupRestore(refreshAfterRestore);
   await renderMonthlyExpenses();
   await renderMonthlySummary();
   setupMealTypeUI();
@@ -248,4 +250,16 @@ if ("serviceWorker" in navigator) {
   } else {
     navigator.serviceWorker.register("./service-worker.js").catch(console.error);
   }
+}
+
+async function refreshAfterRestore() {
+  categoryMap = await populateCategorySelect();
+  await setupCategoryManager();
+  setupThemeToggle();
+  refreshPrivacyLockControls();
+  await Promise.all([
+    renderMonthlyExpenses(),
+    renderMonthlySummary(),
+    renderFilteredAnalytics()
+  ]);
 }

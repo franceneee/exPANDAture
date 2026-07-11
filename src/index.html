@@ -201,6 +201,24 @@
                 <button id="lock-now-settings" class="secondary-button full-width">Lock now</button>
             </div>
             <div class="settings-block">
+                <h3>Backup garden</h3>
+                <p class="setting-note">Download a full JSON backup of expenses, baskets, and local settings. Restore
+                    by merging with this device or replacing everything after a safety backup is downloaded.</p>
+                <button id="backup-export-btn" type="button" class="secondary-button full-width">Download full
+                    backup</button>
+                <form id="restore-form" class="restore-form">
+                    <label for="restore-file">Restore from backup</label>
+                    <input id="restore-file" type="file" accept="application/json,.json" />
+                    <fieldset class="restore-options">
+                        <legend>Restore mode</legend>
+                        <label><input type="radio" name="restore-mode" value="merge" checked /> Merge</label>
+                        <label><input type="radio" name="restore-mode" value="replace" /> Replace all</label>
+                    </fieldset>
+                    <p id="restore-preview" class="setting-note" role="status"></p>
+                    <button class="primary-button">Restore backup</button>
+                </form>
+            </div>
+            <div class="settings-block">
                 <h3>Spending baskets</h3>
                 <form id="category-form" class="inline-form"><input name="category-name"
                         placeholder="New category" /><button class="primary-button">Add</button></form>

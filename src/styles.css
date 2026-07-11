@@ -806,6 +806,36 @@ input[aria-invalid="true"] {
     flex: 1
 }
 
+.restore-form {
+    margin-top: 14px
+}
+
+.restore-options {
+    display: flex;
+    gap: 16px;
+    padding: 0;
+    border: 0
+}
+
+.restore-options legend {
+    margin-bottom: 8px;
+    color: var(--jade-dark);
+    font-size: .78rem;
+    font-weight: 700
+}
+
+.restore-options label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink);
+    font-size: .74rem
+}
+
+.restore-options input {
+    width: auto
+}
+
 .bottomRow {
     position: fixed;
     z-index: 8;

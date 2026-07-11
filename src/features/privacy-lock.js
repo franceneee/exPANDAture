@@ -20,6 +20,11 @@ function updateLockButton() {
     document.getElementById("lock-now-header").hidden = !getStoredPin();
 }
 
+export function refreshPrivacyLockControls() {
+    updateLockButton();
+    resetInactivityTimer();
+}
+
 async function savePin(pin) {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     localStorage.setItem(PIN_KEY, JSON.stringify({ salt: bytesToBase64(salt), hash: await derivePin(pin, salt) }));
