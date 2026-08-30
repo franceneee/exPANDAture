@@ -123,9 +123,42 @@
                     <div id="monthSwitcher"><button id="prevMonth" class="icon-button"
                             aria-label="Previous month">‹</button><span id="currentMonth"></span><button id="nextMonth"
                             class="icon-button" aria-label="Next month">›</button></div>
-                    <div id="trail-month-total" class="trail-month-total">$0.00 spent</div><button id="export-btn"
-                        class="secondary-button">Export CSV</button>
+                    <div id="trail-month-total" class="trail-month-total">$0.00 spent</div>
+                    <div class="trail-actions">
+                        <button id="catch-up-btn" class="secondary-button">Import / bulk add</button>
+                        <button id="export-btn" class="secondary-button">Export CSV</button>
+                    </div>
                 </div>
+                <section id="catch-up-panel" class="catch-up-panel" hidden>
+                    <div class="section-heading compact">
+                        <div>
+                            <p class="eyebrow">CATCH-UP TOOLS</p>
+                            <h3>Feed the trail faster</h3>
+                        </div>
+                    </div>
+                    <div class="catch-up-grid">
+                        <form id="csv-import-form" class="catch-up-card">
+                            <h4>Import CSV</h4>
+                            <p class="setting-note">Use exPANDAture CSV columns: Date, Description, Amount, Currency,
+                                Category, Meal Type.</p>
+                            <input id="csv-import-file" type="file" accept=".csv,text/csv" />
+                            <div id="csv-import-preview" class="import-preview" role="status"></div>
+                            <button id="csv-import-save" class="primary-button" disabled>Import selected rows</button>
+                        </form>
+                        <form id="bulk-add-form" class="catch-up-card">
+                            <h4>Bulk add</h4>
+                            <p class="setting-note">Blank rows are ignored. Duplicate-looking rows are skipped.</p>
+                            <div class="bulk-scroll">
+                                <div id="bulk-add-rows"></div>
+                            </div>
+                            <div class="bulk-actions">
+                                <button id="bulk-add-row" type="button" class="secondary-button">Add row</button>
+                                <button class="primary-button">Save valid rows</button>
+                            </div>
+                            <div id="bulk-add-preview" class="import-preview" role="status"></div>
+                        </form>
+                    </div>
+                </section>
                 <form id="export-panel" class="export-panel" hidden>
                     <fieldset class="export-options">
                         <legend>Export period</legend>

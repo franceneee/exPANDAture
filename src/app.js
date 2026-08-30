@@ -5,6 +5,7 @@ import { initState, getActiveMonthKey, state } from "./features/state.js";
 import { renderTodayDate } from "./features/utils.js";
 import { setupCategoryManager } from "./ui/category-manager.js";
 import { setupBackupRestore } from "./ui/backup-restore.js";
+import { setupCatchUpTools } from "./ui/catch-up-tools.js";
 import { populateCategorySelect } from "./ui/category-select.js";
 import { populateCurrencySelect } from "./ui/currency-select.js";
 import { setupExpenseForm } from "./ui/expense-form.js";
@@ -88,6 +89,7 @@ async function initApp() {
   setupExpenseForm();
   await setupCategoryManager();
   setupBackupRestore(refreshAfterRestore);
+  setupCatchUpTools(getCategoryMap, refreshAfterImport);
   await renderMonthlyExpenses();
   await renderMonthlySummary();
   setupMealTypeUI();
@@ -231,6 +233,14 @@ document.querySelector("#addExpenseBtn").onclick = () => {
   state.view = "expenseForm";
   renderApp();
 };
+
+async function refreshAfterImport() {
+  await Promise.all([
+    renderMonthlyExpenses(),
+    renderMonthlySummary(),
+    renderFilteredAnalytics()
+  ]);
+}
 
 window.goHome = async () => {
   state.view = "home";

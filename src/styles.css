@@ -383,6 +383,185 @@ input[aria-invalid="true"] {
     margin-bottom: 15px
 }
 
+.trail-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end
+}
+
+.catch-up-panel {
+    margin: -5px 0 12px;
+    padding: 14px;
+    border-radius: 18px;
+    background: var(--leaf-soft)
+}
+
+.catch-up-panel[hidden] {
+    display: none
+}
+
+.catch-up-grid {
+    display: grid;
+    gap: 12px
+}
+
+.catch-up-card {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    min-width: 0;
+    padding: 14px;
+    border-radius: 16px;
+    background: rgba(255, 253, 246, .72)
+}
+
+.catch-up-card h4 {
+    margin: 0;
+    color: var(--ink);
+    font-family: "Fredoka", sans-serif;
+    font-size: 1rem
+}
+
+.catch-up-card input,
+.catch-up-card select {
+    background: var(--card)
+}
+
+.catch-up-card button:disabled {
+    cursor: not-allowed;
+    opacity: .55;
+    transform: none
+}
+
+.import-preview {
+    display: grid;
+    gap: 8px;
+    max-height: 260px;
+    overflow: auto
+}
+
+.import-summary {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    color: var(--muted);
+    font-size: .74rem
+}
+
+.import-summary strong {
+    color: var(--jade-dark)
+}
+
+.import-preview-list {
+    display: grid;
+    gap: 7px
+}
+
+.import-preview-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: start;
+    padding: 9px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: var(--card)
+}
+
+.import-preview-row input {
+    width: auto;
+    margin-top: 3px;
+    accent-color: var(--jade)
+}
+
+.import-preview-row small,
+.import-preview-row em {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: .72rem;
+    font-style: normal;
+    line-height: 1.35
+}
+
+.import-preview-row.invalid {
+    border-color: color-mix(in srgb, var(--danger) 42%, transparent)
+}
+
+.import-preview-row.invalid em {
+    color: var(--danger)
+}
+
+.import-preview-row.duplicate {
+    opacity: .74
+}
+
+.bulk-scroll {
+    overflow: visible;
+    padding-bottom: 0
+}
+
+.bulk-row {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card)
+}
+
+.bulk-row label {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+    color: var(--jade-dark);
+    font-size: .76rem;
+    font-weight: 800
+}
+
+.bulk-row-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--ink);
+    font-family: "Fredoka", sans-serif;
+    font-weight: 800
+}
+
+.bulk-row input,
+.bulk-row select {
+    width: 100%;
+    padding: 10px 11px;
+    border-radius: 12px
+}
+
+.bulk-remove-row {
+    padding: 8px 10px;
+    font-size: .72rem
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap
+}
+
+@media(min-width:640px) {
+    .bulk-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
+
+    .bulk-row-title,
+    .bulk-row .wide-field {
+        grid-column: 1 / -1
+    }
+}
+
 .export-panel {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1335,6 +1514,19 @@ input[aria-invalid="true"] {
     .card-header {
         align-items: stretch;
         flex-direction: column
+    }
+
+    .trail-actions {
+        justify-content: stretch
+    }
+
+    .trail-actions button,
+    .bulk-actions button {
+        flex: 1
+    }
+
+    .catch-up-grid {
+        grid-template-columns: 1fr
     }
 
     .export-panel {
