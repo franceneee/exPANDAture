@@ -81,7 +81,12 @@
                 </div><button type="button" id="closeBtn" class="icon-button" aria-label="Close">×</button>
             </div>
             <form id="expense-form">
-                <div class="field-row"><label for="date">When?</label><input id="date" type="date" name="date" /></div>
+                <div class="field-row"><label for="date">When?</label>
+                    <div class="date-control">
+                        <input id="date" type="date" name="date" aria-describedby="date-display" />
+                        <span id="date-display" aria-hidden="true">Pick a date</span>
+                    </div>
+                </div>
                 <div class="field-row"><label for="amount">How much?</label>
                     <div class="amount-row"><select id="currency" name="currency" aria-label="Currency"></select><input
                             id="amount" type="number" name="amount" step="0.01" placeholder="0.00"

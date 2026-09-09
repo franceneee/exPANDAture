@@ -333,6 +333,37 @@ input[type="date"]::-webkit-date-and-time-value {
     text-align: center
 }
 
+.date-control {
+    position: relative;
+    display: grid;
+    min-height: 52px
+}
+
+.date-control input[type="date"] {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0
+}
+
+.date-control span {
+    display: grid;
+    place-items: center;
+    min-height: 52px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0 44px;
+    color: var(--ink);
+    background: #fbfaf3;
+    font-size: 1rem;
+    text-align: center
+}
+
+.date-control:focus-within span {
+    border-color: var(--leaf);
+    box-shadow: 0 0 0 3px rgba(117, 168, 107, .18)
+}
+
 input:focus,
 select:focus {
     border-color: var(--leaf);

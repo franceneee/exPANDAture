@@ -18,6 +18,9 @@ export function setupExpenseForm() {
     const dateInput = f.querySelector("input[name='date']");
     const amountInput = f.querySelector("input[name='amount']");
     setDefaultDate(dateInput);
+    syncDateDisplay(dateInput);
+    dateInput.addEventListener("input", () => syncDateDisplay(dateInput));
+    dateInput.addEventListener("change", () => syncDateDisplay(dateInput));
     document.getElementById("resetBtn").onclick = () => { resetFormMode(); };
     document.getElementById("closeBtn").onclick = () => { state.view = "home"; renderApp(); };
     amountInput.addEventListener("input", () => clearAmountError(amountInput));
@@ -77,6 +80,7 @@ export function setupExpenseForm() {
                 await Promise.all([renderMonthlyExpenses(), renderMonthlySummary()]);
                 f.reset();
                 setDefaultDate(dateInput);
+                syncDateDisplay(dateInput);
                 hideMealTypeUI();
                 showToast("Expense saved.");
             }
@@ -94,6 +98,7 @@ export function openEditForm(expense) {
     form.description.value = expense.description;
     form.amount.value = expense.amount / 100;
     form.date.value = expense.date;
+    syncDateDisplay(form.date);
     form.category.value = expense.categoryId;
     setupMealTypeUI();
 
@@ -127,12 +132,26 @@ function resetFormMode() {
 
     const dateInput = form.querySelector("input[name='date']");
     setDefaultDate(dateInput);
+    syncDateDisplay(dateInput);
     document.getElementById("form-title").textContent = "Add Expense";
     document.getElementById("submitBtn").textContent = "save";
 }
 
 function setDefaultDate(input) {
     input.value = getRememberedExpenseDate() || getTodayDate();
+}
+
+function syncDateDisplay(input) {
+    const display = document.getElementById("date-display");
+    if (!display) return;
+
+    display.textContent = isDateInputValue(input.value)
+        ? new Date(`${input.value}T00:00:00`).toLocaleDateString("en-SG", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        })
+        : "Pick a date";
 }
 
 function rememberExpenseDate(date) {
