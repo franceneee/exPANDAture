@@ -314,6 +314,25 @@ select {
     outline: none
 }
 
+input[type="date"] {
+    height: 52px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 52px;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+    display: block;
+    width: 100%;
+    min-height: 1.2em;
+    margin: 0;
+    line-height: normal;
+    text-align: center
+}
+
 input:focus,
 select:focus {
     border-color: var(--leaf);
