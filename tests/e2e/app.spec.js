@@ -81,6 +81,26 @@ test("opens edit form from the expense row and supports delete undo", async ({ p
   await expect(page.locator(".expense-item .meta")).toContainText("bubble tea");
 });
 
+test("keeps expense action buttons aligned when descriptions wrap", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await addExpenseThroughForm(page, {
+    date: TEST_DAY_19,
+    amount: "22.51",
+    description: "caramel espresso chewy candy with an extra long note"
+  });
+
+  await page.locator("#historyBtn").click();
+  await page.locator(".day-header").click();
+
+  const item = page.locator(".expense-item").first();
+  const deleteBox = await item.locator("#deleteBtn").boundingBox();
+  const editBox = await item.locator("#editBtn").boundingBox();
+
+  expect(deleteBox).not.toBeNull();
+  expect(editBox).not.toBeNull();
+  expect(Math.abs(deleteBox.y - editBox.y)).toBeLessThan(2);
+});
+
 test("shows an empty pie chart state when there is no analytics data", async ({ page }) => {
   await page.locator("#historyBtn").click();
   await page.getByRole("button", { name: "Panda patterns" }).click();

@@ -89,8 +89,8 @@ function renderGroupedByDay(expenses, list, categoryMap) {
           <strong>${categoryMap[e.categoryId] || "Uncategorised"}</strong>
           <div class="meta">${mealLabel}${e.description}</div>
         </div>
-        <div>
-          $${(e.amount / 100).toFixed(2)}
+        <div class="expense-actions">
+          <strong class="expense-amount">$${(e.amount / 100).toFixed(2)}</strong>
           <button id="deleteBtn" class="small-button" data-id="${e.id}" aria-label="Delete expense">×</button>
           <button id="editBtn" class="material-symbols-outlined small-button" data-id="${e.id}" aria-label="Edit expense">edit</button>
         </div>

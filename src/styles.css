@@ -750,15 +750,39 @@ input[aria-invalid="true"] {
 }
 
 .expense-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
     gap: 8px;
     padding: 12px 3px;
     border-bottom: 1px dashed var(--line);
     border-radius: 12px;
     cursor: pointer;
     transition: background .16s ease, transform .16s ease
+}
+
+.expense-main {
+    min-width: 0
+}
+
+.expense-main .meta {
+    overflow-wrap: anywhere
+}
+
+.expense-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 42px);
+    gap: 6px;
+    align-items: center;
+    justify-content: end;
+    justify-items: center
+}
+
+.expense-amount {
+    grid-column: 1 / -1;
+    justify-self: end;
+    white-space: nowrap;
+    font-weight: 500
 }
 
 .expense-item:hover,
@@ -784,7 +808,7 @@ input[aria-invalid="true"] {
     width: 42px;
     height: 34px;
     padding: 0;
-    margin-left: 4px;
+    margin: 0;
     font-size: .72rem;
     font-weight: 700;
     line-height: 1
@@ -1595,10 +1619,6 @@ input[aria-invalid="true"] {
 
     #monthSwitcher {
         justify-content: space-between
-    }
-
-    .expense-item {
-        align-items: flex-start
     }
 
     .bamboo {
