@@ -43,6 +43,45 @@ The service worker caches the app shell so the app can open offline after it has
 
 When changing cached files during development, update the cache name in `src/service-worker.js` or unregister the old service worker from browser dev tools. A normal page refresh may still show cached assets.
 
+## Testing On iPhone Before Deploying
+
+Automated tests catch app logic regressions, but iOS Safari can still render native controls differently from desktop browsers. For mobile UI fixes, test the branch on your actual iPhone before pushing to `main`.
+
+1. Connect your computer and iPhone to the same Wi-Fi network.
+2. Start a no-cache LAN preview:
+
+```bash
+npm run preview:phone
+```
+
+3. Find your computer's local IPv4 address. On Windows:
+
+```powershell
+ipconfig
+```
+
+4. On your iPhone, open:
+
+```text
+http://YOUR-COMPUTER-IP:4174/index.html
+```
+
+For example:
+
+```text
+http://192.168.1.119:4174/index.html
+```
+
+This preview uses a separate browser origin from your deployed GitHub Pages app, so it will not touch your production iPhone PWA data. Use it for visual QA and quick test entries only.
+
+Before merging or pushing to `main`, run:
+
+```bash
+npm test
+```
+
+Then do a quick iPhone pass through the flows that changed, such as adding an expense, editing it, checking Trail, and checking Grove.
+
 ## Privacy Model
 
 - Expenses, categories, settings, and backups are handled locally in the browser.

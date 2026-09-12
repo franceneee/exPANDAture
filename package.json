@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "check:js": "node tests/scripts/check-js.mjs",
+    "preview:phone": "http-server src -a 0.0.0.0 -p 4174 -c-1",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test": "npm run check:js && npm run test:unit && npm run test:e2e"
