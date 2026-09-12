@@ -55,6 +55,7 @@ test("remembers the last expense date after saving", async ({ page }) => {
   });
 
   await expect(page.locator("#date")).toHaveValue(TEST_DAY_18);
+  await expect(page.locator("#date-display")).toHaveText(formatDisplayDate(TEST_DAY_18));
 });
 
 test("opens edit form from the expense row and supports delete undo", async ({ page }) => {
@@ -247,4 +248,9 @@ function getRelativeMonthKey(offset) {
 
 function getDateInCurrentMonth(day) {
   return `${TEST_MONTH}-${String(day).padStart(2, "0")}`;
+}
+
+function formatDisplayDate(date) {
+  const [year, month, day] = date.split("-");
+  return `${day}/${month}/${year}`;
 }

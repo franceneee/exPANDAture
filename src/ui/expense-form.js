@@ -146,12 +146,13 @@ function syncDateDisplay(input) {
     if (!display) return;
 
     display.textContent = isDateInputValue(input.value)
-        ? new Date(`${input.value}T00:00:00`).toLocaleDateString("en-SG", {
-            day: "numeric",
-            month: "short",
-            year: "numeric"
-        })
+        ? formatDateForDisplay(input.value)
         : "Pick a date";
+}
+
+function formatDateForDisplay(date) {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
 }
 
 function rememberExpenseDate(date) {
